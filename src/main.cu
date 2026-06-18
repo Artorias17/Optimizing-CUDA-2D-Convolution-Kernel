@@ -300,6 +300,129 @@ bool run_random_reference_test() {
     return passed;
 }
 
+void run_naive_benchmark() {
+    constexpr int H = 1024;
+    constexpr int W = 1024;
+    constexpr int filter_radius = 2;
+
+    constexpr int warmup_runs = 3;
+    constexpr int timed_runs = 50;
+
+    const int filter_width =
+        2 * filter_radius + 1;
+
+    const int image_elements = H * W;
+
+    const int filter_elements =
+        filter_width * filter_width;
+
+    const size_t image_bytes =
+        static_cast<size_t>(image_elements) * sizeof(float);
+
+    const size_t filter_bytes =
+        static_cast<size_t>(filter_elements) * sizeof(float);
+
+    std::vector<float> h_input(image_elements);
+    std::vector<float> h_filter(filter_elements);
+
+    generate_random_image(
+        h_input.data(),
+        H,
+        W,
+        42
+    );
+
+    generate_random_filter(
+        h_filter.data(),
+        filter_radius,
+        123
+    );
+
+    float* d_input = nullptr;
+    float* d_filter = nullptr;
+    float* d_output = nullptr;
+
+    CHECK_CUDA(cudaMalloc(
+        reinterpret_cast<void**>(&d_input),
+        image_bytes
+    ));
+
+    CHECK_CUDA(cudaMalloc(
+        reinterpret_cast<void**>(&d_filter),
+        filter_bytes
+    ));
+
+    CHECK_CUDA(cudaMalloc(
+        reinterpret_cast<void**>(&d_output),
+        image_bytes
+    ));
+
+    CHECK_CUDA(cudaMemcpy(
+        d_input,
+        h_input.data(),
+        image_bytes,
+        cudaMemcpyHostToDevice
+    ));
+
+    CHECK_CUDA(cudaMemcpy(
+        d_filter,
+        h_filter.data(),
+        filter_bytes,
+        cudaMemcpyHostToDevice
+    ));
+
+    const ConvParams params{
+        H,
+        W,
+        filter_radius,
+        ZERO_PADDING
+    };
+
+    const BenchmarkResult result =
+        benchmark_naive_conv(
+            d_input,
+            d_filter,
+            d_output,
+            params,
+            warmup_runs,
+            timed_runs
+        );
+
+    std::cout << "\nNaive CUDA benchmark\n";
+    std::cout << "Image: "
+              << H << " x " << W << '\n';
+
+    std::cout << "Filter: "
+              << filter_width
+              << " x "
+              << filter_width
+              << '\n';
+
+    std::cout << "Timed runs: "
+              << timed_runs
+              << '\n';
+
+    std::cout << "Mean execution time: "
+              << result.time_ms
+              << " ms\n";
+
+    std::cout << "Standard deviation: "
+              << result.stddev_ms
+              << " ms\n";
+
+    std::cout << "Performance: "
+              << result.gflops
+              << " GFLOPS\n";
+
+    std::cout << "Estimated effective bandwidth: "
+              << result.bandwidth_gbs
+              << " GB/s\n";
+
+    CHECK_CUDA(cudaFree(d_input));
+    CHECK_CUDA(cudaFree(d_filter));
+    CHECK_CUDA(cudaFree(d_output));
+}
+
 int main() {
     print_device_information();
 
@@ -333,6 +456,8 @@ int main() {
 
     std::cout << "\nRandom CPU/GPU comparison passed."
               << std::endl;
+
+    run_naive_benchmark();
 
     return EXIT_SUCCESS;
 }

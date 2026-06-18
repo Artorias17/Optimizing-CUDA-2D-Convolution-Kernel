@@ -28,6 +28,7 @@ struct ConvParams {
 
 struct BenchmarkResult {
     float time_ms;
+    float stddev_ms;
     float gflops;
     float bandwidth_gbs;
 };
@@ -69,6 +70,15 @@ void cpu_reference_conv(
     const float* filter,
     float* output,
     ConvParams params
+);
+
+BenchmarkResult benchmark_naive_conv(
+    const float* d_input,
+    const float* d_filter,
+    float* d_output,
+    ConvParams params,
+    int warmup_runs,
+    int timed_runs
 );
 
 #endif

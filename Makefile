@@ -8,7 +8,8 @@ CUDA_ARCH ?= sm_89
 SOURCES := \
 	src/main.cu \
 	src/naive_conv.cu \
-	src/cpu_reference.cu
+	src/cpu_reference.cu \
+	src/benchmark.cu
 
 OBJECTS := $(patsubst src/%.cu,$(BUILD_DIR)/%.o,$(SOURCES))
 
