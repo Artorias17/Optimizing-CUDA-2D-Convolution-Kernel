@@ -1,3 +1,5 @@
+#include <stdexcept>
+#include <string>
 #include <cuda_runtime.h>
 
 #include <cstdlib>
@@ -65,13 +67,13 @@ bool run_identity_filter_test() {
     constexpr int W = 5;
     constexpr int filter_radius = 1;
 
-    constexpr int filter_width =
-        2 * filter_radius + 1;
+    const int filter_width =
+    2 * filter_radius + 1;
 
-    constexpr int image_elements = H * W;
+const int image_elements = H * W;
 
-    constexpr int filter_elements =
-        filter_width * filter_width;
+const int filter_elements =
+    filter_width * filter_width;
 
     const size_t image_bytes =
         image_elements * sizeof(float);
@@ -300,13 +302,13 @@ bool run_random_reference_test() {
     return passed;
 }
 
-void run_naive_benchmark() {
-    constexpr int H = 1024;
-    constexpr int W = 1024;
-    constexpr int filter_radius = 2;
-
+void run_naive_benchmark(
+    int H,
+    int W,
+    int filter_radius,
+    int timed_runs
+) {
     constexpr int warmup_runs = 3;
-    constexpr int timed_runs = 50;
 
     const int filter_width =
         2 * filter_radius + 1;
@@ -423,41 +425,191 @@ void run_naive_benchmark() {
     CHECK_CUDA(cudaFree(d_output));
 }
 
-int main() {
-    print_device_information();
+struct CliOptions {
+    bool run_tests = false;
+    bool run_benchmark = false;
+    bool show_help = false;
 
-    std::cout << "Running 5 x 5 identity filter test...\n\n";
+    std::string kernel = "naive";
 
-    const bool identity_test_passed =
-        run_identity_filter_test();
+    int H = 1024;
+    int W = 1024;
+    int filter_radius = 2;
+    int runs = 50;
+};
 
-    if (!identity_test_passed) {
-        std::cerr << "\nNaive convolution identity test failed."
-                  << std::endl;
-
-        return EXIT_FAILURE;
-    }
-
-    std::cout << "\nNaive convolution identity test passed."
-              << std::endl;
-
+void print_usage(const char* program_name) {
     std::cout
-        << "\nRunning random 7 x 9 image with 5 x 5 filter...\n\n";
+        << "Usage:\n"
+        << "  " << program_name << " --test\n"
+        << "  " << program_name
+        << " --kernel naive"
+        << " --H 1024"
+        << " --W 1024"
+        << " --filter-radius 2"
+        << " --runs 50\n\n"
+        << "Options:\n"
+        << "  --test                 Run correctness tests\n"
+        << "  --kernel naive         Select CUDA kernel\n"
+        << "  --H VALUE              Image height\n"
+        << "  --W VALUE              Image width\n"
+        << "  --filter-radius VALUE  Filter radius\n"
+        << "  --runs VALUE           Number of timed samples\n"
+        << "  --help, -h             Show this help\n";
+}
 
-    const bool random_test_passed =
-        run_random_reference_test();
+CliOptions parse_cli_arguments(int argc, char** argv) {
+    CliOptions options;
 
-    if (!random_test_passed) {
-        std::cerr << "\nRandom CPU/GPU comparison failed."
-                  << std::endl;
+    // Preserve the old behavior when no arguments are supplied.
+    if (argc == 1) {
+        options.run_tests = true;
+        options.run_benchmark = true;
+
+        return options;
+    }
+
+    for (int i = 1; i < argc; ++i) {
+        const std::string argument = argv[i];
+
+        auto read_value = [&](const std::string& option_name) {
+            if (i + 1 >= argc) {
+                throw std::runtime_error(
+                    "Missing value for " + option_name
+                );
+            }
+
+            return std::string(argv[++i]);
+        };
+
+        if (argument == "--test") {
+            options.run_tests = true;
+        } else if (argument == "--kernel") {
+            options.kernel = read_value(argument);
+            options.run_benchmark = true;
+        } else if (argument == "--H") {
+            options.H = std::stoi(read_value(argument));
+        } else if (argument == "--W") {
+            options.W = std::stoi(read_value(argument));
+        } else if (argument == "--filter-radius") {
+            options.filter_radius =
+                std::stoi(read_value(argument));
+        } else if (argument == "--runs") {
+            options.runs = std::stoi(read_value(argument));
+        } else if (
+            argument == "--help" ||
+            argument == "-h"
+        ) {
+            options.show_help = true;
+        } else {
+            throw std::runtime_error(
+                "Unknown argument: " + argument
+            );
+        }
+    }
+
+    if (options.run_benchmark && options.kernel != "naive") {
+        throw std::runtime_error(
+            "Only the naive kernel is currently available."
+        );
+    }
+
+    if (options.H <= 0 || options.W <= 0) {
+        throw std::runtime_error(
+            "Image dimensions must be positive."
+        );
+    }
+
+    if (
+        options.filter_radius < 0 ||
+        options.filter_radius > MAX_FILTER_RADIUS
+    ) {
+        throw std::runtime_error(
+            "Filter radius must be between 0 and "
+            + std::to_string(MAX_FILTER_RADIUS)
+            + "."
+        );
+    }
+
+    if (options.runs <= 0) {
+        throw std::runtime_error(
+            "Number of runs must be positive."
+        );
+    }
+
+    return options;
+}
+
+int main(int argc, char** argv) {
+    try {
+        const CliOptions options =
+            parse_cli_arguments(argc, argv);
+
+        if (options.show_help) {
+            print_usage(argv[0]);
+
+            return EXIT_SUCCESS;
+        }
+
+        print_device_information();
+
+        if (options.run_tests) {
+            std::cout
+                << "Running 5 x 5 identity filter test...\n\n";
+
+            const bool identity_test_passed =
+                run_identity_filter_test();
+
+            if (!identity_test_passed) {
+                std::cerr
+                    << "\nNaive convolution identity test failed."
+                    << std::endl;
+
+                return EXIT_FAILURE;
+            }
+
+            std::cout
+                << "\nNaive convolution identity test passed."
+                << std::endl;
+
+            std::cout
+                << "\nRunning random 7 x 9 image "
+                << "with 5 x 5 filter...\n\n";
+
+            const bool random_test_passed =
+                run_random_reference_test();
+
+            if (!random_test_passed) {
+                std::cerr
+                    << "\nRandom CPU/GPU comparison failed."
+                    << std::endl;
+
+                return EXIT_FAILURE;
+            }
+
+            std::cout
+                << "\nRandom CPU/GPU comparison passed."
+                << std::endl;
+        }
+
+        if (options.run_benchmark) {
+            run_naive_benchmark(
+                options.H,
+                options.W,
+                options.filter_radius,
+                options.runs
+            );
+        }
+
+        return EXIT_SUCCESS;
+    } catch (const std::exception& error) {
+        std::cerr
+            << "Error: "
+            << error.what()
+            << "\n\n";
+
+        print_usage(argv[0]);
 
         return EXIT_FAILURE;
     }
-
-    std::cout << "\nRandom CPU/GPU comparison passed."
-              << std::endl;
-
-    run_naive_benchmark();
-
-    return EXIT_SUCCESS;
 }
