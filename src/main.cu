@@ -613,6 +613,120 @@ void append_benchmark_result_to_csv(
         << std::endl;
 }
 
+bool run_cudnn_reference_test() {
+    constexpr int H = 7;
+    constexpr int W = 9;
+    constexpr int filter_radius = 2;
+
+    constexpr int filter_width =
+        2 * filter_radius + 1;
+
+    constexpr int image_elements = H * W;
+
+    constexpr int filter_elements =
+        filter_width * filter_width;
+
+    const size_t image_bytes =
+        image_elements * sizeof(float);
+
+    const size_t filter_bytes =
+        filter_elements * sizeof(float);
+
+    std::vector<float> h_input(image_elements);
+    std::vector<float> h_filter(filter_elements);
+    std::vector<float> h_cpu_output(image_elements, 0.0f);
+    std::vector<float> h_cudnn_output(image_elements, 0.0f);
+
+    generate_random_image(
+        h_input.data(),
+        H,
+        W,
+        42
+    );
+
+    generate_random_filter(
+        h_filter.data(),
+        filter_radius,
+        123
+    );
+
+    const ConvParams params{
+        H,
+        W,
+        filter_radius,
+        ZERO_PADDING
+    };
+
+    cpu_reference_conv(
+        h_input.data(),
+        h_filter.data(),
+        h_cpu_output.data(),
+        params
+    );
+
+    float* d_input = nullptr;
+    float* d_filter = nullptr;
+    float* d_output = nullptr;
+
+    CHECK_CUDA(cudaMalloc(
+        reinterpret_cast<void**>(&d_input),
+        image_bytes
+    ));
+
+    CHECK_CUDA(cudaMalloc(
+        reinterpret_cast<void**>(&d_filter),
+        filter_bytes
+    ));
+
+    CHECK_CUDA(cudaMalloc(
+        reinterpret_cast<void**>(&d_output),
+        image_bytes
+    ));
+
+    CHECK_CUDA(cudaMemcpy(
+        d_input,
+        h_input.data(),
+        image_bytes,
+        cudaMemcpyHostToDevice
+    ));
+
+    CHECK_CUDA(cudaMemcpy(
+        d_filter,
+        h_filter.data(),
+        filter_bytes,
+        cudaMemcpyHostToDevice
+    ));
+
+    launch_cudnn_conv(
+        d_input,
+        d_filter,
+        d_output,
+        params
+    );
+
+    CHECK_CUDA(cudaDeviceSynchronize());
+
+    CHECK_CUDA(cudaMemcpy(
+        h_cudnn_output.data(),
+        d_output,
+        image_bytes,
+        cudaMemcpyDeviceToHost
+    ));
+
+    const bool passed = compare_outputs(
+        h_cpu_output.data(),
+        h_cudnn_output.data(),
+        image_elements,
+        1e-4f
+    );
+
+    CHECK_CUDA(cudaFree(d_input));
+    CHECK_CUDA(cudaFree(d_filter));
+    CHECK_CUDA(cudaFree(d_output));
+
+    return passed;
+}
+
 int main(int argc, char** argv) {
     try {
         const CliOptions options =
@@ -663,6 +777,24 @@ int main(int argc, char** argv) {
             std::cout
                 << "\nRandom CPU/GPU comparison passed."
                 << std::endl;
+
+        std::cout
+    << "\nRunning cuDNN CPU reference comparison...\n\n";
+
+const bool cudnn_test_passed =
+    run_cudnn_reference_test();
+
+if (!cudnn_test_passed) {
+    std::cerr
+        << "\ncuDNN CPU comparison failed."
+        << std::endl;
+
+    return EXIT_FAILURE;
+}
+
+std::cout
+    << "\ncuDNN CPU comparison passed."
+    << std::endl;
         }
 
         if (options.run_benchmark) {

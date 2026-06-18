@@ -2,7 +2,7 @@
 #define UTILS_H
 
 #include <cuda_runtime.h>
-
+#include <cudnn.h>
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
@@ -19,6 +19,21 @@
                       << std::endl;                                       \
             std::exit(EXIT_FAILURE);                                      \
         }                                                                 \
+    } while (0)
+
+
+
+#define CHECK_CUDNN(call)                                                \
+    do {                                                                 \
+        cudnnStatus_t status = (call);                                   \
+        if (status != CUDNN_STATUS_SUCCESS) {                            \
+            std::cerr << "cuDNN error at "                               \
+                      << __FILE__ << ":" << __LINE__                      \
+                      << "\nMessage: "                                    \
+                      << cudnnGetErrorString(status)                      \
+                      << std::endl;                                      \
+            std::exit(EXIT_FAILURE);                                     \
+        }                                                                \
     } while (0)
 
 class CudaTimer {

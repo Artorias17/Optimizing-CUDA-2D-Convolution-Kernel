@@ -4,12 +4,14 @@ TARGET := conv
 BUILD_DIR := build
 
 CUDA_ARCH ?= sm_89
+LDLIBS := -lcudnn
 
 SOURCES := \
 	src/main.cu \
 	src/naive_conv.cu \
 	src/cpu_reference.cu \
-	src/benchmark.cu
+	src/benchmark.cu \
+	src/cudnn_conv.cu
 
 OBJECTS := $(patsubst src/%.cu,$(BUILD_DIR)/%.o,$(SOURCES))
 
@@ -28,7 +30,7 @@ LDFLAGS := -arch=$(CUDA_ARCH)
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(NVCC) $(LDFLAGS) $(OBJECTS) -o $(TARGET)
+	$(NVCC) $(LDFLAGS) $(OBJECTS) -o $(TARGET) $(LDLIBS)
 
 $(BUILD_DIR)/%.o: src/%.cu
 	mkdir -p $(BUILD_DIR)
