@@ -1,9 +1,12 @@
-#include <stdexcept>
-#include <string>
 #include <cuda_runtime.h>
 
 #include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "conv.h"
@@ -181,11 +184,11 @@ const int filter_elements =
         1e-5f
     );
 
-    CHECK_CUDA(cudaFree(d_input));
-    CHECK_CUDA(cudaFree(d_filter));
-    CHECK_CUDA(cudaFree(d_output));
+   CHECK_CUDA(cudaFree(d_input));
+CHECK_CUDA(cudaFree(d_filter));
+CHECK_CUDA(cudaFree(d_output));
 
-    return passed;
+return passed;
 }
 
 bool run_random_reference_test() {
@@ -302,7 +305,7 @@ bool run_random_reference_test() {
     return passed;
 }
 
-void run_naive_benchmark(
+BenchmarkResult run_naive_benchmark(
     int H,
     int W,
     int filter_radius,
@@ -421,8 +424,10 @@ void run_naive_benchmark(
               << " GB/s\n";
 
     CHECK_CUDA(cudaFree(d_input));
-    CHECK_CUDA(cudaFree(d_filter));
-    CHECK_CUDA(cudaFree(d_output));
+CHECK_CUDA(cudaFree(d_filter));
+CHECK_CUDA(cudaFree(d_output));
+
+return result;
 }
 
 struct CliOptions {
@@ -431,6 +436,7 @@ struct CliOptions {
     bool show_help = false;
 
     std::string kernel = "naive";
+    std::string output_path;
 
     int H = 1024;
     int W = 1024;
@@ -455,6 +461,7 @@ void print_usage(const char* program_name) {
         << "  --W VALUE              Image width\n"
         << "  --filter-radius VALUE  Filter radius\n"
         << "  --runs VALUE           Number of timed samples\n"
+        << "  --output PATH          Append benchmark result to CSV\n"
         << "  --help, -h             Show this help\n";
 }
 
@@ -495,17 +502,19 @@ CliOptions parse_cli_arguments(int argc, char** argv) {
             options.filter_radius =
                 std::stoi(read_value(argument));
         } else if (argument == "--runs") {
-            options.runs = std::stoi(read_value(argument));
-        } else if (
-            argument == "--help" ||
-            argument == "-h"
-        ) {
-            options.show_help = true;
-        } else {
-            throw std::runtime_error(
-                "Unknown argument: " + argument
-            );
-        }
+    options.runs = std::stoi(read_value(argument));
+} else if (argument == "--output") {
+    options.output_path = read_value(argument);
+} else if (
+    argument == "--help" ||
+    argument == "-h"
+) {
+    options.show_help = true;
+} else {
+    throw std::runtime_error(
+        "Unknown argument: " + argument
+    );
+}
     }
 
     if (options.run_benchmark && options.kernel != "naive") {
@@ -536,8 +545,72 @@ CliOptions parse_cli_arguments(int argc, char** argv) {
             "Number of runs must be positive."
         );
     }
+    if (
+    !options.output_path.empty() &&
+    !options.run_benchmark
+) {
+    throw std::runtime_error(
+        "--output can only be used with a benchmark."
+    );
+}
 
     return options;
+}
+
+void append_benchmark_result_to_csv(
+    const std::string& output_path,
+    const std::string& kernel_name,
+    int H,
+    int W,
+    int filter_radius,
+    const BenchmarkResult& result
+) {
+    const std::filesystem::path file_path(output_path);
+
+    if (file_path.has_parent_path()) {
+        std::filesystem::create_directories(
+            file_path.parent_path()
+        );
+    }
+
+    const bool write_header =
+        !std::filesystem::exists(file_path) ||
+        std::filesystem::file_size(file_path) == 0;
+
+    std::ofstream output_file(
+        output_path,
+        std::ios::app
+    );
+
+    if (!output_file.is_open()) {
+        throw std::runtime_error(
+            "Could not open output file: " + output_path
+        );
+    }
+
+    if (write_header) {
+        output_file
+            << "kernel,H,W,filter_radius,"
+            << "mean_ms,stddev_ms,gflops,bandwidth_gbs\n";
+    }
+
+    output_file
+        << std::fixed
+        << std::setprecision(6)
+        << kernel_name << ','
+        << H << ','
+        << W << ','
+        << filter_radius << ','
+        << result.time_ms << ','
+        << result.stddev_ms << ','
+        << result.gflops << ','
+        << result.bandwidth_gbs
+        << '\n';
+
+    std::cout
+        << "Result appended to: "
+        << output_path
+        << std::endl;
 }
 
 int main(int argc, char** argv) {
@@ -593,13 +666,25 @@ int main(int argc, char** argv) {
         }
 
         if (options.run_benchmark) {
-            run_naive_benchmark(
-                options.H,
-                options.W,
-                options.filter_radius,
-                options.runs
-            );
-        }
+    const BenchmarkResult result =
+        run_naive_benchmark(
+            options.H,
+            options.W,
+            options.filter_radius,
+            options.runs
+        );
+
+    if (!options.output_path.empty()) {
+        append_benchmark_result_to_csv(
+            options.output_path,
+            options.kernel,
+            options.H,
+            options.W,
+            options.filter_radius,
+            result
+        );
+    }
+}
 
         return EXIT_SUCCESS;
     } catch (const std::exception& error) {
