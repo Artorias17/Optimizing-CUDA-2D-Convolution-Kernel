@@ -64,4 +64,11 @@ void launch_cudnn_conv(
     ConvParams params
 );
 
+void cpu_reference_conv(
+    const float* input,
+    const float* filter,
+    float* output,
+    ConvParams params
+);
+
 #endif
