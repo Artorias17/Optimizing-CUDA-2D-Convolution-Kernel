@@ -40,20 +40,25 @@ BenchmarkResult benchmark_naive_conv(
 
     CudaTimer timer;
 
-    for (int run = 0; run < timed_runs; ++run) {
-        timer.start();
+    constexpr int launches_per_sample = 20;
 
+for (int run = 0; run < timed_runs; ++run) {
+    timer.start();
+
+    for (int launch = 0; launch < launches_per_sample; ++launch) {
         launch_naive_conv(
             d_input,
             d_filter,
             d_output,
             params
         );
-
-        const float elapsed_ms = timer.stop();
-
-        execution_times.push_back(elapsed_ms);
     }
+
+    const float elapsed_ms =
+        timer.stop() / static_cast<float>(launches_per_sample);
+
+    execution_times.push_back(elapsed_ms);
+}
 
     const float total_time = std::accumulate(
         execution_times.begin(),
