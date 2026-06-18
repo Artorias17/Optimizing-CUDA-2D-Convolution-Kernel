@@ -8,3 +8,12 @@ wheels/
 
 # Virtual environments
 .venv
+
+# CUDA build outputs
+build/
+conv
+*.o
+
+# Generated benchmark and profiling outputs
+results/
+profiling/*.ncu-rep
