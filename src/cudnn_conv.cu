@@ -6,15 +6,7 @@
 #include "conv.h"
 #include "utils.h"
 
-void launch_cudnn_conv(
-    const float* d_input,
-    const float* d_filter,
-    float* d_output,
-    ConvParams params
-) {
-    const int filter_width =
-        2 * params.filter_radius + 1;
-
+struct CudnnConvContext {
     cudnnHandle_t handle = nullptr;
 
     cudnnTensorDescriptor_t input_descriptor = nullptr;
@@ -22,30 +14,72 @@ void launch_cudnn_conv(
     cudnnFilterDescriptor_t filter_descriptor = nullptr;
     cudnnConvolutionDescriptor_t convolution_descriptor = nullptr;
 
-    CHECK_CUDNN(cudnnCreate(&handle));
+    cudnnConvolutionFwdAlgo_t algorithm =
+        CUDNN_CONVOLUTION_FWD_ALGO_IMPLICIT_GEMM;
+
+    void* d_workspace = nullptr;
+    size_t workspace_size = 0;
+
+    const float* d_input = nullptr;
+    const float* d_filter = nullptr;
+    float* d_output = nullptr;
+};
+
+CudnnConvContext* create_cudnn_conv_context(
+    const float* d_input,
+    const float* d_filter,
+    float* d_output,
+    ConvParams params
+) {
+    if (params.pad_mode != ZERO_PADDING) {
+        std::cerr
+            << "cuDNN implementation currently supports "
+            << "ZERO_PADDING only."
+            << std::endl;
+
+        std::exit(EXIT_FAILURE);
+    }
+
+    auto* context = new CudnnConvContext{};
+
+    context->d_input = d_input;
+    context->d_filter = d_filter;
+    context->d_output = d_output;
+
+    const int filter_width =
+        2 * params.filter_radius + 1;
 
     CHECK_CUDNN(
-        cudnnCreateTensorDescriptor(&input_descriptor)
+        cudnnCreate(&context->handle)
     );
 
     CHECK_CUDNN(
-        cudnnCreateTensorDescriptor(&output_descriptor)
+        cudnnCreateTensorDescriptor(
+            &context->input_descriptor
+        )
     );
 
     CHECK_CUDNN(
-        cudnnCreateFilterDescriptor(&filter_descriptor)
+        cudnnCreateTensorDescriptor(
+            &context->output_descriptor
+        )
+    );
+
+    CHECK_CUDNN(
+        cudnnCreateFilterDescriptor(
+            &context->filter_descriptor
+        )
     );
 
     CHECK_CUDNN(
         cudnnCreateConvolutionDescriptor(
-            &convolution_descriptor
+            &context->convolution_descriptor
         )
     );
 
-    // Input tensor: N = 1, C = 1, H, W.
     CHECK_CUDNN(
         cudnnSetTensor4dDescriptor(
-            input_descriptor,
+            context->input_descriptor,
             CUDNN_TENSOR_NCHW,
             CUDNN_DATA_FLOAT,
             1,
@@ -55,10 +89,9 @@ void launch_cudnn_conv(
         )
     );
 
-    // Filter tensor: K = 1, C = 1, R, S.
     CHECK_CUDNN(
         cudnnSetFilter4dDescriptor(
-            filter_descriptor,
+            context->filter_descriptor,
             CUDNN_DATA_FLOAT,
             CUDNN_TENSOR_NCHW,
             1,
@@ -68,10 +101,9 @@ void launch_cudnn_conv(
         )
     );
 
-    // Padding keeps the output dimensions equal to the input.
     CHECK_CUDNN(
         cudnnSetConvolution2dDescriptor(
-            convolution_descriptor,
+            context->convolution_descriptor,
             params.filter_radius,
             params.filter_radius,
             1,
@@ -90,9 +122,9 @@ void launch_cudnn_conv(
 
     CHECK_CUDNN(
         cudnnGetConvolution2dForwardOutputDim(
-            convolution_descriptor,
-            input_descriptor,
-            filter_descriptor,
+            context->convolution_descriptor,
+            context->input_descriptor,
+            context->filter_descriptor,
             &output_n,
             &output_c,
             &output_h,
@@ -119,7 +151,7 @@ void launch_cudnn_conv(
 
     CHECK_CUDNN(
         cudnnSetTensor4dDescriptor(
-            output_descriptor,
+            context->output_descriptor,
             CUDNN_TENSOR_NCHW,
             CUDNN_DATA_FLOAT,
             output_n,
@@ -129,17 +161,16 @@ void launch_cudnn_conv(
         )
     );
 
-    // Ask cuDNN for its recommended forward algorithm.
     cudnnConvolutionFwdAlgoPerf_t algorithm_result{};
     int returned_algorithm_count = 0;
 
     CHECK_CUDNN(
         cudnnGetConvolutionForwardAlgorithm_v7(
-            handle,
-            input_descriptor,
-            filter_descriptor,
-            convolution_descriptor,
-            output_descriptor,
+            context->handle,
+            context->input_descriptor,
+            context->filter_descriptor,
+            context->convolution_descriptor,
+            context->output_descriptor,
             1,
             &returned_algorithm_count,
             &algorithm_result
@@ -151,38 +182,47 @@ void launch_cudnn_conv(
         algorithm_result.status != CUDNN_STATUS_SUCCESS
     ) {
         std::cerr
-            << "cuDNN could not select a convolution algorithm."
+            << "cuDNN could not select a forward algorithm."
             << std::endl;
 
         std::exit(EXIT_FAILURE);
     }
 
-    const cudnnConvolutionFwdAlgo_t algorithm =
-        algorithm_result.algo;
-
-    size_t workspace_size = 0;
+    context->algorithm = algorithm_result.algo;
 
     CHECK_CUDNN(
         cudnnGetConvolutionForwardWorkspaceSize(
-            handle,
-            input_descriptor,
-            filter_descriptor,
-            convolution_descriptor,
-            output_descriptor,
-            algorithm,
-            &workspace_size
+            context->handle,
+            context->input_descriptor,
+            context->filter_descriptor,
+            context->convolution_descriptor,
+            context->output_descriptor,
+            context->algorithm,
+            &context->workspace_size
         )
     );
 
-    void* d_workspace = nullptr;
-
-    if (workspace_size > 0) {
+    if (context->workspace_size > 0) {
         CHECK_CUDA(
             cudaMalloc(
-                &d_workspace,
-                workspace_size
+                &context->d_workspace,
+                context->workspace_size
             )
         );
+    }
+
+    return context;
+}
+
+void run_cudnn_conv(
+    CudnnConvContext* context
+) {
+    if (context == nullptr) {
+        std::cerr
+            << "Cannot run cuDNN convolution with a null context."
+            << std::endl;
+
+        std::exit(EXIT_FAILURE);
     }
 
     const float alpha = 1.0f;
@@ -190,49 +230,96 @@ void launch_cudnn_conv(
 
     CHECK_CUDNN(
         cudnnConvolutionForward(
-            handle,
+            context->handle,
             &alpha,
-            input_descriptor,
-            d_input,
-            filter_descriptor,
-            d_filter,
-            convolution_descriptor,
-            algorithm,
-            d_workspace,
-            workspace_size,
+            context->input_descriptor,
+            context->d_input,
+            context->filter_descriptor,
+            context->d_filter,
+            context->convolution_descriptor,
+            context->algorithm,
+            context->d_workspace,
+            context->workspace_size,
             &beta,
-            output_descriptor,
-            d_output
+            context->output_descriptor,
+            context->d_output
         )
     );
+}
 
-    if (d_workspace != nullptr) {
-        CHECK_CUDA(cudaFree(d_workspace));
+void destroy_cudnn_conv_context(
+    CudnnConvContext* context
+) {
+    if (context == nullptr) {
+        return;
     }
 
-    CHECK_CUDNN(
-        cudnnDestroyConvolutionDescriptor(
-            convolution_descriptor
-        )
-    );
+    if (context->d_workspace != nullptr) {
+        CHECK_CUDA(
+            cudaFree(context->d_workspace)
+        );
+    }
 
-    CHECK_CUDNN(
-        cudnnDestroyFilterDescriptor(
-            filter_descriptor
-        )
-    );
+    if (context->convolution_descriptor != nullptr) {
+        CHECK_CUDNN(
+            cudnnDestroyConvolutionDescriptor(
+                context->convolution_descriptor
+            )
+        );
+    }
 
-    CHECK_CUDNN(
-        cudnnDestroyTensorDescriptor(
-            output_descriptor
-        )
-    );
+    if (context->filter_descriptor != nullptr) {
+        CHECK_CUDNN(
+            cudnnDestroyFilterDescriptor(
+                context->filter_descriptor
+            )
+        );
+    }
 
-    CHECK_CUDNN(
-        cudnnDestroyTensorDescriptor(
-            input_descriptor
-        )
-    );
+    if (context->output_descriptor != nullptr) {
+        CHECK_CUDNN(
+            cudnnDestroyTensorDescriptor(
+                context->output_descriptor
+            )
+        );
+    }
 
-    CHECK_CUDNN(cudnnDestroy(handle));
+    if (context->input_descriptor != nullptr) {
+        CHECK_CUDNN(
+            cudnnDestroyTensorDescriptor(
+                context->input_descriptor
+            )
+        );
+    }
+
+    if (context->handle != nullptr) {
+        CHECK_CUDNN(
+            cudnnDestroy(context->handle)
+        );
+    }
+
+    delete context;
+}
+
+void launch_cudnn_conv(
+    const float* d_input,
+    const float* d_filter,
+    float* d_output,
+    ConvParams params
+) {
+    CudnnConvContext* context =
+        create_cudnn_conv_context(
+            d_input,
+            d_filter,
+            d_output,
+            params
+        );
+
+    run_cudnn_conv(context);
+
+    // Ensure the operation has finished before releasing
+    // descriptors and workspace in this one-shot wrapper.
+    CHECK_CUDA(cudaDeviceSynchronize());
+
+    destroy_cudnn_conv_context(context);
 }

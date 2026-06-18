@@ -449,14 +449,14 @@ void print_usage(const char* program_name) {
         << "Usage:\n"
         << "  " << program_name << " --test\n"
         << "  " << program_name
-        << " --kernel naive"
+        << " --kernel [naive|cudnn]"
         << " --H 1024"
         << " --W 1024"
         << " --filter-radius 2"
         << " --runs 50\n\n"
         << "Options:\n"
         << "  --test                 Run correctness tests\n"
-        << "  --kernel naive         Select CUDA kernel\n"
+        << "  --kernel VALUE         naive or cudnn\n"
         << "  --H VALUE              Image height\n"
         << "  --W VALUE              Image width\n"
         << "  --filter-radius VALUE  Filter radius\n"
@@ -517,11 +517,15 @@ CliOptions parse_cli_arguments(int argc, char** argv) {
 }
     }
 
-    if (options.run_benchmark && options.kernel != "naive") {
-        throw std::runtime_error(
-            "Only the naive kernel is currently available."
-        );
-    }
+    if (
+    options.run_benchmark &&
+    options.kernel != "naive" &&
+    options.kernel != "cudnn"
+) {
+    throw std::runtime_error(
+        "Kernel must be 'naive' or 'cudnn'."
+    );
+}
 
     if (options.H <= 0 || options.W <= 0) {
         throw std::runtime_error(
@@ -727,6 +731,140 @@ bool run_cudnn_reference_test() {
     return passed;
 }
 
+BenchmarkResult run_cudnn_benchmark(
+    int H,
+    int W,
+    int filter_radius,
+    int timed_runs
+) {
+    constexpr int warmup_runs = 3;
+
+    const int filter_width =
+        2 * filter_radius + 1;
+
+    const int image_elements = H * W;
+
+    const int filter_elements =
+        filter_width * filter_width;
+
+    const size_t image_bytes =
+        static_cast<size_t>(image_elements) * sizeof(float);
+
+    const size_t filter_bytes =
+        static_cast<size_t>(filter_elements) * sizeof(float);
+
+    std::vector<float> h_input(image_elements);
+    std::vector<float> h_filter(filter_elements);
+
+    generate_random_image(
+        h_input.data(),
+        H,
+        W,
+        42
+    );
+
+    generate_random_filter(
+        h_filter.data(),
+        filter_radius,
+        123
+    );
+
+    float* d_input = nullptr;
+    float* d_filter = nullptr;
+    float* d_output = nullptr;
+
+    CHECK_CUDA(cudaMalloc(
+        reinterpret_cast<void**>(&d_input),
+        image_bytes
+    ));
+
+    CHECK_CUDA(cudaMalloc(
+        reinterpret_cast<void**>(&d_filter),
+        filter_bytes
+    ));
+
+    CHECK_CUDA(cudaMalloc(
+        reinterpret_cast<void**>(&d_output),
+        image_bytes
+    ));
+
+    CHECK_CUDA(cudaMemcpy(
+        d_input,
+        h_input.data(),
+        image_bytes,
+        cudaMemcpyHostToDevice
+    ));
+
+    CHECK_CUDA(cudaMemcpy(
+        d_filter,
+        h_filter.data(),
+        filter_bytes,
+        cudaMemcpyHostToDevice
+    ));
+
+    const ConvParams params{
+        H,
+        W,
+        filter_radius,
+        ZERO_PADDING
+    };
+
+    CudnnConvContext* context =
+        create_cudnn_conv_context(
+            d_input,
+            d_filter,
+            d_output,
+            params
+        );
+
+    const BenchmarkResult result =
+        benchmark_cudnn_conv(
+            context,
+            params,
+            warmup_runs,
+            timed_runs
+        );
+
+    std::cout << "\ncuDNN benchmark\n";
+
+    std::cout << "Image: "
+              << H << " x " << W << '\n';
+
+    std::cout << "Filter: "
+              << filter_width
+              << " x "
+              << filter_width
+              << '\n';
+
+    std::cout << "Timed runs: "
+              << timed_runs
+              << '\n';
+
+    std::cout << "Mean execution time: "
+              << result.time_ms
+              << " ms\n";
+
+    std::cout << "Standard deviation: "
+              << result.stddev_ms
+              << " ms\n";
+
+    std::cout << "Performance: "
+              << result.gflops
+              << " GFLOPS\n";
+
+    std::cout << "Estimated effective bandwidth: "
+              << result.bandwidth_gbs
+              << " GB/s\n";
+
+    destroy_cudnn_conv_context(context);
+
+    CHECK_CUDA(cudaFree(d_input));
+    CHECK_CUDA(cudaFree(d_filter));
+    CHECK_CUDA(cudaFree(d_output));
+
+    return result;
+}
+
 int main(int argc, char** argv) {
     try {
         const CliOptions options =
@@ -797,14 +935,24 @@ std::cout
     << std::endl;
         }
 
-        if (options.run_benchmark) {
-    const BenchmarkResult result =
-        run_naive_benchmark(
+       if (options.run_benchmark) {
+    BenchmarkResult result{};
+
+    if (options.kernel == "naive") {
+        result = run_naive_benchmark(
             options.H,
             options.W,
             options.filter_radius,
             options.runs
         );
+    } else {
+        result = run_cudnn_benchmark(
+            options.H,
+            options.W,
+            options.filter_radius,
+            options.runs
+        );
+    }
 
     if (!options.output_path.empty()) {
         append_benchmark_result_to_csv(

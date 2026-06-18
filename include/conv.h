@@ -1,6 +1,7 @@
 #ifndef CONV_H
 #define CONV_H
 
+
 // Largest filter used in the benchmark: 11 x 11.
 #define MAX_FILTER_SIZE 11
 
@@ -13,6 +14,8 @@
 
 // Default CUDA thread block size.
 #define BLOCK_SIZE 16
+
+struct CudnnConvContext;
 
 enum PadMode {
     ZERO_PADDING = 0,
@@ -65,6 +68,21 @@ void launch_cudnn_conv(
     ConvParams params
 );
 
+CudnnConvContext* create_cudnn_conv_context(
+    const float* d_input,
+    const float* d_filter,
+    float* d_output,
+    ConvParams params
+);
+
+void run_cudnn_conv(
+    CudnnConvContext* context
+);
+
+void destroy_cudnn_conv_context(
+    CudnnConvContext* context
+);
+
 void cpu_reference_conv(
     const float* input,
     const float* filter,
@@ -76,6 +94,13 @@ BenchmarkResult benchmark_naive_conv(
     const float* d_input,
     const float* d_filter,
     float* d_output,
+    ConvParams params,
+    int warmup_runs,
+    int timed_runs
+);
+
+BenchmarkResult benchmark_cudnn_conv(
+    CudnnConvContext* context,
     ConvParams params,
     int warmup_runs,
     int timed_runs
