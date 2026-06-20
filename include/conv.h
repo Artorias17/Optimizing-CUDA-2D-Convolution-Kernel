@@ -1,13 +1,6 @@
 #ifndef CONV_H
 #define CONV_H
 
-// Largest filter used in the benchmark: 11 x 11.
-#define MAX_FILTER_SIZE 11
-
-// Radius corresponding to an 11 x 11 filter:
-// radius = (filter_size - 1) / 2 = 5.
-#define MAX_FILTER_RADIUS 5
-
 // Maximum filter width reserved for CUDA constant memory.
 #define MAX_CONST_MEM_FILTER 15
 
