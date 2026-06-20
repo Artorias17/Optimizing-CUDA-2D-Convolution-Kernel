@@ -15,15 +15,23 @@ SOURCES := \
 
 OBJECTS := $(patsubst src/%.cu,$(BUILD_DIR)/%.o,$(SOURCES))
 
+HEADERS := $(wildcard include/*.h)
+
+CUDNN_INCLUDE ?= $(wildcard .venv/lib/python3.11/site-packages/nvidia/cudnn/include)
+CUDNN_LIB     ?= $(wildcard .venv/lib/python3.11/site-packages/nvidia/cudnn/lib)
+
 NVCCFLAGS := \
 	-std=c++17 \
 	-O2 \
 	-arch=$(CUDA_ARCH) \
 	-Iinclude \
+	$(if $(CUDNN_INCLUDE),-I$(CUDNN_INCLUDE)) \
 	-lineinfo \
 	-Xcompiler=-Wall,-Wextra
 
-LDFLAGS := -arch=$(CUDA_ARCH)
+LDFLAGS := \
+	-arch=$(CUDA_ARCH) \
+	$(if $(CUDNN_LIB),-L$(CUDNN_LIB))
 
 .PHONY: all clean run debug
 
@@ -32,7 +40,7 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(NVCC) $(LDFLAGS) $(OBJECTS) -o $(TARGET) $(LDLIBS)
 
-$(BUILD_DIR)/%.o: src/%.cu
+$(BUILD_DIR)/%.o: src/%.cu $(HEADERS)
 	mkdir -p $(BUILD_DIR)
 	$(NVCC) $(NVCCFLAGS) -c $< -o $@
 

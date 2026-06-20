@@ -6,20 +6,12 @@
 #include "conv.h"
 #include "utils.h"
 
-__global__ void naive_conv_kernel(
-    const float* input,
-    const float* filter,
-    float* output,
-    int H,
-    int W,
-    int filter_radius,
-    int pad_mode
-) {
-    const int output_row =
-        blockIdx.y * blockDim.y + threadIdx.y;
+__global__ void naive_conv_kernel(const float *input, const float *filter,
+                                  float *output, int H, int W,
+                                  int filter_radius, int pad_mode) {
+    const int output_row = blockIdx.y * blockDim.y + threadIdx.y;
 
-    const int output_col =
-        blockIdx.x * blockDim.x + threadIdx.x;
+    const int output_col = blockIdx.x * blockDim.x + threadIdx.x;
 
     // Some threads can fall outside the image when H or W
     // is not divisible by the block dimensions.
@@ -31,16 +23,10 @@ __global__ void naive_conv_kernel(
 
     float sum = 0.0f;
 
-    for (
-        int filter_row = -filter_radius;
-        filter_row <= filter_radius;
-        ++filter_row
-    ) {
-        for (
-            int filter_col = -filter_radius;
-            filter_col <= filter_radius;
-            ++filter_col
-        ) {
+    for (int filter_row = -filter_radius; filter_row <= filter_radius;
+         ++filter_row) {
+        for (int filter_col = -filter_radius; filter_col <= filter_radius;
+             ++filter_col) {
             int input_row = output_row + filter_row;
             int input_col = output_col + filter_col;
 
@@ -55,15 +41,11 @@ __global__ void naive_conv_kernel(
             } else {
                 // ZERO_PADDING:
                 // out-of-bounds pixels have value zero.
-                const bool inside_image =
-                    input_row >= 0 &&
-                    input_row < H &&
-                    input_col >= 0 &&
-                    input_col < W;
+                const bool inside_image = input_row >= 0 && input_row < H &&
+                                          input_col >= 0 && input_col < W;
 
                 if (inside_image) {
-                    input_value =
-                        input[input_row * W + input_col];
+                    input_value = input[input_row * W + input_col];
                 }
             }
 
@@ -78,39 +60,22 @@ __global__ void naive_conv_kernel(
     output[output_row * W + output_col] = sum;
 }
 
-void launch_naive_conv(
-    const float* d_input,
-    const float* d_filter,
-    float* d_output,
-    ConvParams params
-) {
-    if (
-        params.H <= 0 ||
-        params.W <= 0 ||
-        params.filter_radius < 0
-    ) {
-        std::cerr << "Invalid convolution parameters."
-                  << std::endl;
+void launch_naive_conv(const float *d_input, const float *d_filter,
+                       float *d_output, ConvParams params) {
+    if (params.H <= 0 || params.W <= 0 || params.filter_radius < 0) {
+        std::cerr << "Invalid convolution parameters." << std::endl;
 
         std::exit(EXIT_FAILURE);
     }
 
     const dim3 block(BLOCK_SIZE, BLOCK_SIZE);
 
-    const dim3 grid(
-        (params.W + block.x - 1) / block.x,
-        (params.H + block.y - 1) / block.y
-    );
+    const dim3 grid((params.W + block.x - 1) / block.x,
+                    (params.H + block.y - 1) / block.y);
 
-    naive_conv_kernel<<<grid, block>>>(
-        d_input,
-        d_filter,
-        d_output,
-        params.H,
-        params.W,
-        params.filter_radius,
-        params.pad_mode
-    );
+    naive_conv_kernel<<<grid, block>>>(d_input, d_filter, d_output, params.H,
+                                       params.W, params.filter_radius,
+                                       params.pad_mode);
 
     // Checks whether the kernel launch itself failed.
     // Synchronization is handled by the caller or benchmark.

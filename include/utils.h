@@ -1,43 +1,27 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <cuda_runtime.h>
-#include <cudnn.h>
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <cuda_runtime.h>
 #include <iostream>
 #include <random>
 
-#define CHECK_CUDA(call)                                                  \
-    do {                                                                  \
-        cudaError_t error = (call);                                       \
-        if (error != cudaSuccess) {                                       \
-            std::cerr << "CUDA error at " << __FILE__ << ":" << __LINE__  \
-                      << "\nError code: " << static_cast<int>(error)       \
-                      << "\nMessage: " << cudaGetErrorString(error)        \
-                      << std::endl;                                       \
-            std::exit(EXIT_FAILURE);                                      \
-        }                                                                 \
-    } while (0)
-
-
-
-#define CHECK_CUDNN(call)                                                \
-    do {                                                                 \
-        cudnnStatus_t status = (call);                                   \
-        if (status != CUDNN_STATUS_SUCCESS) {                            \
-            std::cerr << "cuDNN error at "                               \
-                      << __FILE__ << ":" << __LINE__                      \
-                      << "\nMessage: "                                    \
-                      << cudnnGetErrorString(status)                      \
-                      << std::endl;                                      \
-            std::exit(EXIT_FAILURE);                                     \
-        }                                                                \
+#define CHECK_CUDA(call)                                                       \
+    do {                                                                       \
+        cudaError_t error = (call);                                            \
+        if (error != cudaSuccess) {                                            \
+            std::cerr << "CUDA error at " << __FILE__ << ":" << __LINE__       \
+                      << "\nError code: " << static_cast<int>(error)           \
+                      << "\nMessage: " << cudaGetErrorString(error)            \
+                      << std::endl;                                            \
+            std::exit(EXIT_FAILURE);                                           \
+        }                                                                      \
     } while (0)
 
 class CudaTimer {
-public:
+  public:
     CudaTimer() {
         CHECK_CUDA(cudaEventCreate(&start_event_));
         CHECK_CUDA(cudaEventCreate(&stop_event_));
@@ -59,30 +43,21 @@ public:
         float elapsed_ms = 0.0f;
 
         CHECK_CUDA(
-            cudaEventElapsedTime(
-                &elapsed_ms,
-                start_event_,
-                stop_event_
-            )
-        );
+            cudaEventElapsedTime(&elapsed_ms, start_event_, stop_event_));
 
         return elapsed_ms;
     }
 
-    CudaTimer(const CudaTimer&) = delete;
-    CudaTimer& operator=(const CudaTimer&) = delete;
+    CudaTimer(const CudaTimer &) = delete;
+    CudaTimer &operator=(const CudaTimer &) = delete;
 
-private:
+  private:
     cudaEvent_t start_event_;
     cudaEvent_t stop_event_;
 };
 
-inline void generate_random_image(
-    float* image,
-    int H,
-    int W,
-    unsigned int seed = 42
-) {
+inline void generate_random_image(float *image, int H, int W,
+                                  unsigned int seed = 42) {
     std::mt19937 generator(seed);
     std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
@@ -93,11 +68,8 @@ inline void generate_random_image(
     }
 }
 
-inline void generate_random_filter(
-    float* filter,
-    int filter_radius,
-    unsigned int seed = 123
-) {
+inline void generate_random_filter(float *filter, int filter_radius,
+                                   unsigned int seed = 123) {
     std::mt19937 generator(seed);
     std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
@@ -109,12 +81,8 @@ inline void generate_random_filter(
     }
 }
 
-inline bool compare_outputs(
-    const float* reference,
-    const float* output,
-    int size,
-    float tolerance = 1e-5f
-) {
+inline bool compare_outputs(const float *reference, const float *output,
+                            int size, float tolerance = 1e-5f) {
     float max_absolute_error = 0.0f;
     int max_error_index = -1;
 
@@ -127,28 +95,21 @@ inline bool compare_outputs(
         }
     }
 
-    std::cout << "Maximum absolute error: "
-              << max_absolute_error
-              << std::endl;
+    std::cout << "Maximum absolute error: " << max_absolute_error << std::endl;
 
     if (max_absolute_error > tolerance) {
-        std::cerr << "Output comparison failed at index "
-                  << max_error_index
+        std::cerr << "Output comparison failed at index " << max_error_index
                   << std::endl;
 
-        std::cerr << "Reference value: "
-                  << reference[max_error_index]
+        std::cerr << "Reference value: " << reference[max_error_index]
                   << std::endl;
 
-        std::cerr << "Output value: "
-                  << output[max_error_index]
-                  << std::endl;
+        std::cerr << "Output value: " << output[max_error_index] << std::endl;
 
         return false;
     }
 
-    std::cout << "Output comparison passed."
-              << std::endl;
+    std::cout << "Output comparison passed." << std::endl;
 
     return true;
 }

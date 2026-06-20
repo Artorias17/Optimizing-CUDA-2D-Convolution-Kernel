@@ -1,0 +1,18 @@
+{
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/include",
+        "/usr/local/cuda/include",
+        "${workspaceFolder}/.venv/lib/python3.11/site-packages/nvidia/cudnn/include"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/local/cuda/bin/nvcc",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "linux-gcc-x64"
+    }
+  ],
+  "version": 4
+}
