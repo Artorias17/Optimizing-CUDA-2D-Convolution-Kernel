@@ -32,19 +32,15 @@ struct BenchmarkResult {
     float bandwidth_gbs;
 };
 
-// Person A
 void launch_naive_conv(const float *d_input, const float *d_filter,
                        float *d_output, ConvParams params);
 
-// Person B
 void launch_tiled_conv(const float *d_input, const float *d_filter,
                        float *d_output, ConvParams params);
 
-// Person B
 void launch_const_mem_conv(const float *d_input, const float *h_filter,
                            float *d_output, ConvParams params);
 
-// Person A
 void launch_cudnn_conv(const float *d_input, const float *d_filter,
                        float *d_output, ConvParams params);
 
@@ -64,7 +60,8 @@ BenchmarkResult benchmark_naive_conv(const float *d_input,
                                      ConvParams params, int warmup_runs,
                                      int timed_runs);
 
-BenchmarkResult benchmark_cudnn_conv(CudnnConvContext *context,
+BenchmarkResult benchmark_cudnn_conv(const float *d_input,
+                                     const float *d_filter, float *d_output,
                                      ConvParams params, int warmup_runs,
                                      int timed_runs);
 

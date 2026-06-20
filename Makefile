@@ -4,16 +4,14 @@ TARGET := conv
 BUILD_DIR := build
 
 CUDA_ARCH ?= sm_89
-LDLIBS := -lcudnn
+LDLIBS := -l:libcudnn.so.9
 
-SOURCES := \
-	src/main.cu \
-	src/naive_conv.cu \
-	src/cpu_reference.cu \
-	src/benchmark.cu \
-	src/cudnn_conv.cu
+CU_SOURCES  := $(wildcard src/*.cu)
+CPP_SOURCES := $(wildcard src/*.cpp)
 
-OBJECTS := $(patsubst src/%.cu,$(BUILD_DIR)/%.o,$(SOURCES))
+CU_OBJECTS  := $(patsubst src/%.cu,$(BUILD_DIR)/%.o,$(CU_SOURCES))
+CPP_OBJECTS := $(patsubst src/%.cpp,$(BUILD_DIR)/%.o,$(CPP_SOURCES))
+OBJECTS     := $(CU_OBJECTS) $(CPP_OBJECTS)
 
 HEADERS := $(wildcard include/*.h)
 
@@ -31,7 +29,7 @@ NVCCFLAGS := \
 
 LDFLAGS := \
 	-arch=$(CUDA_ARCH) \
-	$(if $(CUDNN_LIB),-L$(CUDNN_LIB))
+	$(if $(CUDNN_LIB),-L$(CUDNN_LIB) -Xlinker=-rpath=$(CUDNN_LIB))
 
 .PHONY: all clean run debug
 
@@ -41,6 +39,10 @@ $(TARGET): $(OBJECTS)
 	$(NVCC) $(LDFLAGS) $(OBJECTS) -o $(TARGET) $(LDLIBS)
 
 $(BUILD_DIR)/%.o: src/%.cu $(HEADERS)
+	mkdir -p $(BUILD_DIR)
+	$(NVCC) $(NVCCFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/%.o: src/%.cpp $(HEADERS)
 	mkdir -p $(BUILD_DIR)
 	$(NVCC) $(NVCCFLAGS) -c $< -o $@
 
