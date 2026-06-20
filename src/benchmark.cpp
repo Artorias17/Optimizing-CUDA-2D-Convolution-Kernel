@@ -51,6 +51,54 @@ BenchmarkResult benchmark_naive_conv(const float *d_input,
     return compute_result(times, params);
 }
 
+BenchmarkResult benchmark_tiled_conv(const float *d_input,
+                                     const float *d_filter, float *d_output,
+                                     ConvParams params, int warmup_runs,
+                                     int timed_runs) {
+    constexpr int launches_per_sample = 20;
+
+    for (int i = 0; i < warmup_runs; ++i)
+        launch_tiled_conv(d_input, d_filter, d_output, params);
+    CHECK_CUDA(cudaDeviceSynchronize());
+
+    CudaTimer timer;
+    std::vector<float> times;
+    times.reserve(timed_runs);
+
+    for (int run = 0; run < timed_runs; ++run) {
+        timer.start();
+        for (int i = 0; i < launches_per_sample; ++i)
+            launch_tiled_conv(d_input, d_filter, d_output, params);
+        times.push_back(timer.stop() / launches_per_sample);
+    }
+
+    return compute_result(times, params);
+}
+
+BenchmarkResult benchmark_const_mem_conv(const float *d_input,
+                                         const float *d_filter, float *d_output,
+                                         ConvParams params, int warmup_runs,
+                                         int timed_runs) {
+    constexpr int launches_per_sample = 20;
+
+    for (int i = 0; i < warmup_runs; ++i)
+        launch_const_mem_conv(d_input, d_filter, d_output, params);
+    CHECK_CUDA(cudaDeviceSynchronize());
+
+    CudaTimer timer;
+    std::vector<float> times;
+    times.reserve(timed_runs);
+
+    for (int run = 0; run < timed_runs; ++run) {
+        timer.start();
+        for (int i = 0; i < launches_per_sample; ++i)
+            launch_const_mem_conv(d_input, d_filter, d_output, params);
+        times.push_back(timer.stop() / launches_per_sample);
+    }
+
+    return compute_result(times, params);
+}
+
 BenchmarkResult benchmark_cudnn_conv(const float *d_input,
                                      const float *d_filter, float *d_output,
                                      ConvParams params, int warmup_runs,

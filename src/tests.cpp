@@ -26,6 +26,10 @@ bool run_cpu_reference_test(const std::string &kernel,
 
     if (kernel == "cudnn")
         launch_cudnn_conv(gpu.d_input, gpu.d_filter, gpu.d_output, params);
+    else if (kernel == "tiled")
+        launch_tiled_conv(gpu.d_input, gpu.d_filter, gpu.d_output, params);
+    else if (kernel == "const_mem")
+        launch_const_mem_conv(gpu.d_input, gpu.d_filter, gpu.d_output, params);
     else
         launch_naive_conv(gpu.d_input, gpu.d_filter, gpu.d_output, params);
 

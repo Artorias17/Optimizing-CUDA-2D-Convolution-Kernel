@@ -10,7 +10,7 @@
 #include "tests.h"
 #include "utils.h"
 
-static const std::string KERNELS[] = {"naive", "cudnn"};
+static const std::string KERNELS[] = {"naive", "tiled", "const_mem", "cudnn"};
 
 // ---------------------------------------------------------------------------
 // Benchmark
@@ -38,6 +38,12 @@ static void run_all_benchmarks(const std::string &image_path,
         if (kernel == "naive") {
             result = benchmark_naive_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
                                           params, warmup_runs, runs);
+        } else if (kernel == "tiled") {
+            result = benchmark_tiled_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
+                                          params, warmup_runs, runs);
+        } else if (kernel == "const_mem") {
+            result = benchmark_const_mem_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
+                                              params, warmup_runs, runs);
         } else {
             result = benchmark_cudnn_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
                                           params, warmup_runs, runs);

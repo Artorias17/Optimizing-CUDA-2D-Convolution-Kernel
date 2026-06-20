@@ -189,6 +189,7 @@ inline void print_benchmark_result(const std::string &kernel,
                                    const std::string &filter_path, int H, int W,
                                    int filter_width, int timed_runs,
                                    const BenchmarkResult &result) {
+    const int filter_radius = filter_width / 2;
     std::cout << '\n'
               << kernel << " benchmark\n"
               << "Image:  " << image_path << " (" << H << " x " << W << ")\n"
@@ -202,6 +203,11 @@ inline void print_benchmark_result(const std::string &kernel,
               << " GFLOPS\n"
               << "Estimated effective bandwidth: " << result.bandwidth_gbs
               << " GB/s\n";
+    std::printf(
+        "RESULT kernel=%s H=%d W=%d filter_radius=%d filter_width=%d"
+        " runs=%d mean_ms=%.6f stddev_ms=%.6f gflops=%.4f bw_gbs=%.4f\n",
+        kernel.c_str(), H, W, filter_radius, filter_width, timed_runs,
+        result.time_ms, result.stddev_ms, result.gflops, result.bandwidth_gbs);
 }
 
 #endif
