@@ -7,14 +7,26 @@ import os
 IMAGES_DIR = "data/images"
 FILTERS_DIR = "data/filters"
 
-IMAGE_SIZES  = [256, 512, 1024, 2048, 4096]
+IMAGE_SIZES = [256, 512, 1024, 2048, 4096]
 FILTER_RADII = [1, 2, 3, 4, 5]
 
 
 def write_pgm(path: str, width: int, height: int) -> None:
     maxval = 255
     pixels = [
-        str(int((math.sin(math.sqrt((col - width // 2) ** 2 + (row - height // 2) ** 2) / 20.0) * 0.5 + 0.5) * maxval))
+        str(
+            int(
+                (
+                    math.sin(
+                        math.sqrt((col - width // 2) ** 2 + (row - height // 2) ** 2)
+                        / 20.0
+                    )
+                    * 0.5
+                    + 0.5
+                )
+                * maxval
+            )
+        )
         for row in range(height)
         for col in range(width)
     ]
@@ -25,9 +37,9 @@ def write_pgm(path: str, width: int, height: int) -> None:
 
 
 def gaussian_kernel(radius: int) -> list[float]:
-    size  = 2 * radius + 1
+    size = 2 * radius + 1
     sigma = size / 6.0
-    vals  = [
+    vals = [
         math.exp(-((col - radius) ** 2 + (row - radius) ** 2) / (2.0 * sigma * sigma))
         for row in range(size)
         for col in range(size)
@@ -37,12 +49,15 @@ def gaussian_kernel(radius: int) -> list[float]:
 
 
 def write_filter(path: str, radius: int) -> None:
-    size   = 2 * radius + 1
+    size = 2 * radius + 1
     values = gaussian_kernel(radius)
     with open(path, "w") as f:
         f.write(f"{size} {size}\n")
         for row in range(size):
-            f.write(" ".join(f"{v:.6f}" for v in values[row * size : (row + 1) * size]) + "\n")
+            f.write(
+                " ".join(f"{v:.6f}" for v in values[row * size : (row + 1) * size])
+                + "\n"
+            )
 
 
 def main() -> None:

@@ -15,24 +15,21 @@ import sys
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 RESULTS_FILE = os.path.join(PROJECT_ROOT, "results", "benchmark.log")
-BINARY      = os.path.join(PROJECT_ROOT, "conv")
+BINARY = os.path.join(PROJECT_ROOT, "conv")
 
-IMAGE_SIZES  = [256, 512, 1024, 2048, 4096]
+IMAGE_SIZES = [256, 512, 1024, 2048, 4096]
 FILTER_RADII = [1, 2, 3, 4, 5]
 
-
-def runs_for_size(size: int) -> int:
-    if size <= 512:
-        return 100
-    if size <= 2048:
-        return 50
-    return 20
+RUNS = 50
 
 
 def generate_data() -> None:
     print("Preparing benchmark data...")
     subprocess.run(
-        [sys.executable, os.path.join(PROJECT_ROOT, "scripts", "generate_benchmark_data.py")],
+        [
+            sys.executable,
+            os.path.join(PROJECT_ROOT, "scripts", "generate_benchmark_data.py"),
+        ],
         check=True,
     )
 
@@ -42,14 +39,21 @@ def run_benchmarks() -> None:
     open(RESULTS_FILE, "w").close()  # truncate
 
     for size in IMAGE_SIZES:
-        runs  = runs_for_size(size)
+        runs = RUNS
         image = os.path.join(PROJECT_ROOT, "data", "images", f"test_{size}x{size}.pgm")
 
         for radius in FILTER_RADII:
             filter_width = 2 * radius + 1
-            filt = os.path.join(PROJECT_ROOT, "data", "filters", f"gaussian_{filter_width}x{filter_width}.txt")
+            filt = os.path.join(
+                PROJECT_ROOT,
+                "data",
+                "filters",
+                f"gaussian_{filter_width}x{filter_width}.txt",
+            )
 
-            print(f"\nRunning all kernels: {size}x{size}, filter {filter_width}x{filter_width}, runs={runs}")
+            print(
+                f"\nRunning all kernels: {size}x{size}, filter {filter_width}x{filter_width}, runs={runs}"
+            )
 
             result = subprocess.run(
                 [BINARY, "--image", image, "--filter", filt, "--runs", str(runs)],
@@ -73,7 +77,11 @@ def run_benchmarks() -> None:
 def generate_plots() -> None:
     print(f"\nGenerating plots from {RESULTS_FILE} ...")
     subprocess.run(
-        [sys.executable, os.path.join(PROJECT_ROOT, "scripts", "plot_results.py"), RESULTS_FILE],
+        [
+            sys.executable,
+            os.path.join(PROJECT_ROOT, "scripts", "plot_results.py"),
+            RESULTS_FILE,
+        ],
         check=True,
     )
 
@@ -81,18 +89,19 @@ def generate_plots() -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="CUDA convolution benchmark runner")
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--plot",      action="store_true", help="run benchmarks then generate plots")
-    group.add_argument("--plot-only", action="store_true", help="generate plots from existing results")
+    group.add_argument(
+        "--plot", action="store_true", help="run benchmarks then generate plots"
+    )
+    group.add_argument(
+        "--plot-only", action="store_true", help="generate plots from existing results"
+    )
     args = parser.parse_args()
 
-    if args.plot_only:
-        generate_plots()
-        return
+    if not args.plot_only:
+        generate_data()
+        run_benchmarks()
 
-    generate_data()
-    run_benchmarks()
-
-    if args.plot:
+    if args.plot or args.plot_only:
         generate_plots()
 
 

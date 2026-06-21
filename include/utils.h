@@ -61,6 +61,20 @@ class CudaTimer {
     cudaEvent_t stop_event_;
 };
 
+// Returns the next non-comment token from a PGM file stream.
+inline std::string pgm_next_token(std::ifstream &f, const std::string &path) {
+    std::string token;
+    while (f >> token) {
+        if (token[0] == '#') {
+            std::string rest;
+            std::getline(f, rest);
+            continue;
+        }
+        return token;
+    }
+    throw std::runtime_error("Unexpected end of file: " + path);
+}
+
 // Loads an ASCII PGM (P2) image. Pixel values are normalised to [0, 1].
 // Sets H and W from the file header.
 inline std::vector<float> load_image(const std::string &path, int &H, int &W) {
@@ -73,28 +87,14 @@ inline std::vector<float> load_image(const std::string &path, int &H, int &W) {
     if (magic != "P2")
         throw std::runtime_error("Only ASCII PGM (P2) supported: " + path);
 
-    // Skip comment lines and return the next whitespace-separated token.
-    auto next_token = [&]() -> std::string {
-        std::string token;
-        while (f >> token) {
-            if (token[0] == '#') {
-                std::string rest;
-                std::getline(f, rest);
-                continue;
-            }
-            return token;
-        }
-        throw std::runtime_error("Unexpected end of file: " + path);
-    };
-
-    W = std::stoi(next_token());
-    H = std::stoi(next_token());
-    const int maxval = std::stoi(next_token());
+    W = std::stoi(pgm_next_token(f, path));
+    H = std::stoi(pgm_next_token(f, path));
+    const int maxval = std::stoi(pgm_next_token(f, path));
 
     const int n = H * W;
     std::vector<float> pixels(n);
     for (int i = 0; i < n; ++i)
-        pixels[i] = std::stof(next_token()) / static_cast<float>(maxval);
+        pixels[i] = std::stof(pgm_next_token(f, path)) / static_cast<float>(maxval);
 
     return pixels;
 }

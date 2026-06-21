@@ -10,7 +10,7 @@ struct GpuBuffers {
 };
 
 GpuBuffers copyToDevice(const std::vector<float> &h_input,
-                        const std::vector<float> &h_filter, int image_elements);
+                        const std::vector<float> &h_filter);
 
 void freeDevice(GpuBuffers &b);
 

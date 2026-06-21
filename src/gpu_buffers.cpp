@@ -1,28 +1,25 @@
 #include "gpu_buffers.h"
 #include "utils.h"
 
-GpuBuffers copyToDevice(
-    const std::vector<float> &h_input,
-    const std::vector<float> &h_filter,
-    int image_elements
-) {
-    GpuBuffers b;
+GpuBuffers copyToDevice(const std::vector<float> &h_input,
+                        const std::vector<float> &h_filter) {
+    GpuBuffers buffers;
 
-    CHECK_CUDA(cudaMalloc(reinterpret_cast<void **>(&b.d_input),
+    CHECK_CUDA(cudaMalloc(reinterpret_cast<void **>(&buffers.d_input),
                           h_input.size() * sizeof(float)));
-    CHECK_CUDA(cudaMalloc(reinterpret_cast<void **>(&b.d_filter),
+    CHECK_CUDA(cudaMalloc(reinterpret_cast<void **>(&buffers.d_filter),
                           h_filter.size() * sizeof(float)));
-    CHECK_CUDA(cudaMalloc(reinterpret_cast<void **>(&b.d_output),
-                          static_cast<size_t>(image_elements) * sizeof(float)));
+    CHECK_CUDA(cudaMalloc(reinterpret_cast<void **>(&buffers.d_output),
+                          h_input.size() * sizeof(float)));
 
-    CHECK_CUDA(cudaMemcpy(b.d_input, h_input.data(),
+    CHECK_CUDA(cudaMemcpy(buffers.d_input, h_input.data(),
                           h_input.size() * sizeof(float),
                           cudaMemcpyHostToDevice));
-    CHECK_CUDA(cudaMemcpy(b.d_filter, h_filter.data(),
+    CHECK_CUDA(cudaMemcpy(buffers.d_filter, h_filter.data(),
                           h_filter.size() * sizeof(float),
                           cudaMemcpyHostToDevice));
 
-    return b;
+    return buffers;
 }
 
 void freeDevice(GpuBuffers &b) {

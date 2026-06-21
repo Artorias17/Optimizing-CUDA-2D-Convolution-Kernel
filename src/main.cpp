@@ -12,23 +12,17 @@
 
 static const std::string KERNELS[] = {"naive", "tiled", "const_mem", "cudnn"};
 
-// ---------------------------------------------------------------------------
-// Benchmark
-// ---------------------------------------------------------------------------
-
 static void run_all_benchmarks(const std::string &image_path,
-                               const std::string &filter_path,
-                               int runs) {
+                               const std::string &filter_path, int runs) {
     constexpr int warmup_runs = 3;
 
     int H = 0, W = 0, filter_radius = 0;
 
-    const std::vector<float> h_input  = load_image(image_path, H, W);
+    const std::vector<float> h_input = load_image(image_path, H, W);
     const std::vector<float> h_filter = load_filter(filter_path, filter_radius);
-    const int image_elements          = H * W;
-    const int filter_width            = 2 * filter_radius + 1;
+    const int filter_width = 2 * filter_radius + 1;
 
-    GpuBuffers gpu = copyToDevice(h_input, h_filter, image_elements);
+    GpuBuffers gpu = copyToDevice(h_input, h_filter);
 
     const ConvParams params{H, W, filter_radius, ZERO_PADDING};
 
@@ -36,58 +30,65 @@ static void run_all_benchmarks(const std::string &image_path,
         BenchmarkResult result{};
 
         if (kernel == "naive") {
-            result = benchmark_naive_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
-                                          params, warmup_runs, runs);
+            result =
+                benchmark_naive_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
+                                     params, warmup_runs, runs);
         } else if (kernel == "tiled") {
-            result = benchmark_tiled_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
-                                          params, warmup_runs, runs);
+            result =
+                benchmark_tiled_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
+                                     params, warmup_runs, runs);
         } else if (kernel == "const_mem") {
-            result = benchmark_const_mem_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
-                                              params, warmup_runs, runs);
+            result = benchmark_const_mem_conv(gpu.d_input, gpu.d_filter,
+                                              gpu.d_output, params, warmup_runs,
+                                              runs);
         } else {
-            result = benchmark_cudnn_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
-                                          params, warmup_runs, runs);
+            result =
+                benchmark_cudnn_conv(gpu.d_input, gpu.d_filter, gpu.d_output,
+                                     params, warmup_runs, runs);
         }
 
-        print_benchmark_result(kernel, image_path, filter_path,
-                               H, W, filter_width, runs, result);
+        print_benchmark_result(kernel, image_path, filter_path, H, W,
+                               filter_width, runs, result);
     }
 
     freeDevice(gpu);
 }
 
-// ---------------------------------------------------------------------------
-// Entry point
-// ---------------------------------------------------------------------------
-
 static void print_usage(const char *program_name) {
-    std::cout << "Usage:\n"
-              << "  " << program_name
-              << " --image PATH --filter PATH [--runs 50]\n\n"
-              << "Options:\n"
-              << "  --image PATH   Grayscale PGM image file\n"
-              << "  --filter PATH  Plain-text filter file\n"
-              << "  --runs VALUE   Number of timed samples per kernel (default 50)\n"
-              << "  --help, -h     Show this help\n";
+    std::cout
+        << "Usage:\n"
+        << "  " << program_name << " --image PATH --filter PATH [--runs 50]\n\n"
+        << "Options:\n"
+        << "  --image PATH   Grayscale PGM image file\n"
+        << "  --filter PATH  Plain-text filter file\n"
+        << "  --runs VALUE   Number of timed samples per kernel (default 50)\n"
+        << "  --help, -h     Show this help\n";
 }
 
 int main(int argc, char **argv) {
     try {
         std::string image_path, filter_path;
-        int runs = 50;
+        int runs = 0;
 
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
             auto val = [&] {
-                if (++i >= argc) throw std::runtime_error("Missing value for " + arg);
+                if (++i >= argc)
+                    throw std::runtime_error("Missing value for " + arg);
                 return std::string(argv[i]);
             };
 
-            if      (arg == "--image")               image_path  = val();
-            else if (arg == "--filter")              filter_path = val();
-            else if (arg == "--runs")                runs = std::stoi(val());
-            else if (arg == "--help" || arg == "-h") { print_usage(argv[0]); return EXIT_SUCCESS; }
-            else throw std::runtime_error("Unknown argument: " + arg);
+            if (arg == "--image")
+                image_path = val();
+            else if (arg == "--filter")
+                filter_path = val();
+            else if (arg == "--runs")
+                runs = std::stoi(val());
+            else if (arg == "--help" || arg == "-h") {
+                print_usage(argv[0]);
+                return EXIT_SUCCESS;
+            } else
+                throw std::runtime_error("Unknown argument: " + arg);
         }
 
         if (image_path.empty() || filter_path.empty())
@@ -98,9 +99,11 @@ int main(int argc, char **argv) {
         print_device_information();
 
         for (const std::string &kernel : KERNELS) {
-            std::cout << "Verifying " << kernel << " against CPU reference...\n";
+            std::cout << "Verifying " << kernel
+                      << " against CPU reference...\n";
             if (!run_cpu_reference_test(kernel, image_path, filter_path)) {
-                std::cerr << kernel << " correctness check FAILED — aborting.\n";
+                std::cerr << kernel
+                          << " correctness check FAILED — aborting.\n";
                 return EXIT_FAILURE;
             }
             std::cout << "Passed.\n\n";

@@ -8,5 +8,8 @@ dependencies = [
     "matplotlib>=3.11.0",
     "numpy>=2.4.6",
     "nvidia-cudnn-cu12>=9.23.2.1",
+    "openpyxl>=3.1.5",
     "pandas>=3.0.3",
+    "python-pptx>=1.0.2",
+    "tabulate>=0.10.0",
 ]

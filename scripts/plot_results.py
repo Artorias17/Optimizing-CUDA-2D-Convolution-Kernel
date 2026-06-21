@@ -58,30 +58,33 @@ def parse_results(path: str) -> pd.DataFrame:
             m = _RESULT_RE.search(line)
             if not m:
                 continue
-            records.append({
-                "kernel":        m.group("kernel"),
-                "H":             int(m.group("H")),
-                "W":             int(m.group("W")),
-                "filter_radius": int(m.group("filter_radius")),
-                "filter_width":  int(m.group("filter_width")),
-                "timed_runs":    int(m.group("runs")),
-                "mean_ms":       float(m.group("mean_ms")),
-                "stddev_ms":     float(m.group("stddev_ms")),
-                "gflops":        float(m.group("gflops")),
-                "bandwidth_gbs": float(m.group("bw_gbs")),
-            })
+            records.append(
+                {
+                    "kernel": m.group("kernel"),
+                    "H": int(m.group("H")),
+                    "W": int(m.group("W")),
+                    "filter_radius": int(m.group("filter_radius")),
+                    "filter_width": int(m.group("filter_width")),
+                    "timed_runs": int(m.group("runs")),
+                    "mean_ms": float(m.group("mean_ms")),
+                    "stddev_ms": float(m.group("stddev_ms")),
+                    "gflops": float(m.group("gflops")),
+                    "bandwidth_gbs": float(m.group("bw_gbs")),
+                }
+            )
     return pd.DataFrame(records)
 
 
 def save_plot(fig: plt.Figure, name: str, output_dir: str) -> None:
     os.makedirs(output_dir, exist_ok=True)
-    for ext in ("png", "pdf"):
-        fig.savefig(os.path.join(output_dir, f"{name}.{ext}"), bbox_inches="tight", dpi=150)
+    fig.savefig(os.path.join(output_dir, f"{name}.png"), bbox_inches="tight", dpi=150)
     plt.close(fig)
 
 
 # Plot 1 — Execution time vs image size (fixed filter).
-def plot_time_vs_image_size(df: pd.DataFrame, output_dir: str, filter_radius: int = 2) -> None:
+def plot_time_vs_image_size(
+    df: pd.DataFrame, output_dir: str, filter_radius: int = 2
+) -> None:
     sub = df[df["filter_radius"] == filter_radius]
     fw = 2 * filter_radius + 1
 
@@ -91,13 +94,19 @@ def plot_time_vs_image_size(df: pd.DataFrame, output_dir: str, filter_radius: in
         if kdf.empty:
             continue
         ax.errorbar(
-            kdf["H"], kdf["mean_ms"], yerr=kdf["stddev_ms"],
-            label=LABELS[k], color=COLORS[k], marker="o", linewidth=2, capsize=3,
+            kdf["H"],
+            kdf["mean_ms"],
+            yerr=kdf["stddev_ms"],
+            label=LABELS[k],
+            color=COLORS[k],
+            marker="o",
+            linewidth=2,
+            capsize=3,
         )
 
     ax.set_xlabel("Image size (pixels, square)")
     ax.set_ylabel("Execution time (ms)")
-    ax.set_title(f"Execution Time vs Image Size  (filter {fw}×{fw})")
+    ax.set_title(f"Execution Time vs Image Size  (Gaussian {fw}×{fw} filter)")
     ax.set_xticks(sorted(sub["H"].unique()))
     ax.legend()
     ax.grid(True, alpha=0.3)
@@ -106,7 +115,9 @@ def plot_time_vs_image_size(df: pd.DataFrame, output_dir: str, filter_radius: in
 
 
 # Plot 2 — Execution time vs filter size (fixed image).
-def plot_time_vs_filter_size(df: pd.DataFrame, output_dir: str, image_size: int = 1024) -> None:
+def plot_time_vs_filter_size(
+    df: pd.DataFrame, output_dir: str, image_size: int = 4096
+) -> None:
     sub = df[df["H"] == image_size]
 
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -115,15 +126,23 @@ def plot_time_vs_filter_size(df: pd.DataFrame, output_dir: str, image_size: int 
         if kdf.empty:
             continue
         ax.errorbar(
-            kdf["filter_width"], kdf["mean_ms"], yerr=kdf["stddev_ms"],
-            label=LABELS[k], color=COLORS[k], marker="o", linewidth=2, capsize=3,
+            kdf["filter_width"],
+            kdf["mean_ms"],
+            yerr=kdf["stddev_ms"],
+            label=LABELS[k],
+            color=COLORS[k],
+            marker="o",
+            linewidth=2,
+            capsize=3,
         )
 
     ax.set_xlabel("Filter size")
     ax.set_ylabel("Execution time (ms)")
     ax.set_title(f"Execution Time vs Filter Size  ({image_size}×{image_size} image)")
     ax.set_xticks(sorted(sub["filter_width"].unique()))
-    ax.set_xticklabels([f"{fw}×{fw}" for fw in sorted(sub["filter_width"].unique())])
+    ax.set_xticklabels(
+        [f"Gaussian {fw}×{fw}" for fw in sorted(sub["filter_width"].unique())]
+    )
     ax.legend()
     ax.grid(True, alpha=0.3)
     save_plot(fig, "plot2_time_vs_filter_size", output_dir)
@@ -152,10 +171,12 @@ def plot_speedup(df: pd.DataFrame, output_dir: str, filter_radius: int = 2) -> N
                 speedups.append(float(naive_t.values[0]) / float(kernel_t.values[0]))
         ax.bar(x + i * width, speedups, width, label=LABELS[k], color=COLORS[k])
 
-    ax.axhline(y=1.0, color="black", linestyle="--", linewidth=1, label="Naive baseline")
+    ax.axhline(
+        y=1.0, color="black", linestyle="--", linewidth=1, label="Naive baseline"
+    )
     ax.set_xlabel("Image size")
     ax.set_ylabel("Speedup over naive")
-    ax.set_title(f"Speedup over Naive Kernel  (filter {fw}×{fw})")
+    ax.set_title(f"Speedup over Naive Kernel  (Gaussian {fw}×{fw} filter)")
     ax.set_xticks(x + width)
     ax.set_xticklabels([f"{s}×{s}" for s in sizes])
     ax.legend()
@@ -166,7 +187,7 @@ def plot_speedup(df: pd.DataFrame, output_dir: str, filter_radius: int = 2) -> N
 
 # Plot 4 — Effective memory bandwidth (bar chart, single config).
 def plot_bandwidth(
-    df: pd.DataFrame, output_dir: str, image_size: int = 1024, filter_radius: int = 2
+    df: pd.DataFrame, output_dir: str, image_size: int = 4096, filter_radius: int = 2
 ) -> None:
     sub = df[(df["H"] == image_size) & (df["filter_radius"] == filter_radius)]
     fw = 2 * filter_radius + 1
@@ -185,7 +206,9 @@ def plot_bandwidth(
     fig, ax = plt.subplots(figsize=(7, 5))
     ax.bar(labels, bws, color=colors)
     ax.set_ylabel("Effective bandwidth (GB/s)")
-    ax.set_title(f"Memory Bandwidth  ({image_size}×{image_size}, filter {fw}×{fw})")
+    ax.set_title(
+        f"Memory Bandwidth  ({image_size}×{image_size} image, Gaussian {fw}×{fw} filter)"
+    )
     ax.grid(True, axis="y", alpha=0.3)
     save_plot(fig, "plot4_bandwidth", output_dir)
     print("  Saved plot4_bandwidth")
@@ -201,16 +224,58 @@ def plot_gflops(df: pd.DataFrame, output_dir: str, filter_radius: int = 2) -> No
         kdf = sub[sub["kernel"] == k].sort_values("H")
         if kdf.empty:
             continue
-        ax.plot(kdf["H"], kdf["gflops"], label=LABELS[k], color=COLORS[k], marker="o", linewidth=2)
+        ax.plot(
+            kdf["H"],
+            kdf["gflops"],
+            label=LABELS[k],
+            color=COLORS[k],
+            marker="o",
+            linewidth=2,
+        )
 
     ax.set_xlabel("Image size (pixels, square)")
     ax.set_ylabel("Achieved GFLOPS")
-    ax.set_title(f"GFLOPS vs Image Size  (filter {fw}×{fw})")
+    ax.set_title(f"GFLOPS vs Image Size  (Gaussian {fw}×{fw} filter)")
     ax.set_xticks(sorted(sub["H"].unique()))
     ax.legend()
     ax.grid(True, alpha=0.3)
     save_plot(fig, "plot5_gflops", output_dir)
     print("  Saved plot5_gflops")
+
+
+def export_results_table(df: pd.DataFrame, output_dir: str) -> None:
+    out = (
+        df[
+            [
+                "kernel",
+                "H",
+                "W",
+                "filter_width",
+                "mean_ms",
+                "stddev_ms",
+                "gflops",
+                "bandwidth_gbs",
+            ]
+        ]
+        .copy()
+        .sort_values(["H", "filter_width", "kernel"])
+        .rename(
+            columns={
+                "kernel": "Kernel",
+                "H": "Height",
+                "W": "Width",
+                "filter_width": "Filter Size",
+                "mean_ms": "Time (ms)",
+                "stddev_ms": "Stddev (ms)",
+                "gflops": "GFLOPS",
+                "bandwidth_gbs": "Bandwidth (GB/s)",
+            }
+        )
+    )
+    os.makedirs(output_dir, exist_ok=True)
+    out.to_excel(os.path.join(output_dir, "results.xlsx"), index=False)
+    out.to_csv(os.path.join(output_dir, "results.csv"), index=False)
+    print(f"  Saved results table")
 
 
 def main() -> None:
@@ -237,6 +302,7 @@ def main() -> None:
     plot_speedup(df, output_dir)
     plot_bandwidth(df, output_dir)
     plot_gflops(df, output_dir)
+    export_results_table(df, output_dir)
 
     print("Done.")
 
