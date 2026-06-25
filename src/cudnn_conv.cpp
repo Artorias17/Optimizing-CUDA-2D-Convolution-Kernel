@@ -6,6 +6,29 @@
 #include "conv.h"
 #include "utils.h"
 
+static const char *cudnn_fwd_algo_name(cudnnConvolutionFwdAlgo_t algo) {
+    switch (algo) {
+    case CUDNN_CONVOLUTION_FWD_ALGO_IMPLICIT_GEMM:
+        return "IMPLICIT_GEMM";
+    case CUDNN_CONVOLUTION_FWD_ALGO_IMPLICIT_PRECOMP_GEMM:
+        return "IMPLICIT_PRECOMP_GEMM";
+    case CUDNN_CONVOLUTION_FWD_ALGO_GEMM:
+        return "GEMM";
+    case CUDNN_CONVOLUTION_FWD_ALGO_DIRECT:
+        return "DIRECT";
+    case CUDNN_CONVOLUTION_FWD_ALGO_FFT:
+        return "FFT";
+    case CUDNN_CONVOLUTION_FWD_ALGO_FFT_TILING:
+        return "FFT_TILING";
+    case CUDNN_CONVOLUTION_FWD_ALGO_WINOGRAD:
+        return "WINOGRAD";
+    case CUDNN_CONVOLUTION_FWD_ALGO_WINOGRAD_NONFUSED:
+        return "WINOGRAD_NONFUSED";
+    default:
+        return "UNKNOWN";
+    }
+}
+
 #define CHECK_CUDNN(call)                                                      \
     do {                                                                       \
         cudnnStatus_t status = (call);                                         \
@@ -118,6 +141,9 @@ CudnnConvContext *create_cudnn_conv_context(const float *d_input,
     }
 
     context->algorithm = algorithm_result.algo;
+
+    std::cout << "  cuDNN selected algorithm: "
+              << cudnn_fwd_algo_name(context->algorithm) << std::endl;
 
     CHECK_CUDNN(cudnnGetConvolutionForwardWorkspaceSize(
         context->handle, context->input_descriptor, context->filter_descriptor,
