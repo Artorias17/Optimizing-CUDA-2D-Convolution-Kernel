@@ -1,0 +1,1650 @@
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.017079 ms
+Standard deviation:            0.0136158 ms
+Performance:                   69.0699 GFLOPS
+Estimated effective bandwidth: 291.629 GB/s
+RESULT kernel=naive H=256 W=256 filter_radius=1 filter_width=3 runs=50 mean_ms=0.017079 stddev_ms=0.013616 gflops=69.0699 bw_gbs=291.6286
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0181754 ms
+Standard deviation:            0.0186525 ms
+Performance:                   64.9037 GFLOPS
+Estimated effective bandwidth: 274.038 GB/s
+RESULT kernel=tiled H=256 W=256 filter_radius=1 filter_width=3 runs=50 mean_ms=0.018175 stddev_ms=0.018652 gflops=64.9037 bw_gbs=274.0378
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0189978 ms
+Standard deviation:            0.0137388 ms
+Performance:                   62.0941 GFLOPS
+Estimated effective bandwidth: 262.175 GB/s
+RESULT kernel=const_mem H=256 W=256 filter_radius=1 filter_width=3 runs=50 mean_ms=0.018998 stddev_ms=0.013739 gflops=62.0941 bw_gbs=262.1749
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0254329 ms
+Standard deviation:            0.012823 ms
+Performance:                   46.3827 GFLOPS
+Estimated effective bandwidth: 195.838 GB/s
+RESULT kernel=cudnn H=256 W=256 filter_radius=1 filter_width=3 runs=50 mean_ms=0.025433 stddev_ms=0.012823 gflops=46.3827 bw_gbs=195.8379
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.0175514 ms
+Standard deviation:            0.00903887 ms
+Performance:                   186.698 GFLOPS
+Estimated effective bandwidth: 761.727 GB/s
+RESULT kernel=naive H=256 W=256 filter_radius=2 filter_width=5 runs=50 mean_ms=0.017551 stddev_ms=0.009039 gflops=186.6978 bw_gbs=761.7271
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.0186624 ms
+Standard deviation:            0.00820813 ms
+Performance:                   175.583 GFLOPS
+Estimated effective bandwidth: 716.379 GB/s
+RESULT kernel=tiled H=256 W=256 filter_radius=2 filter_width=5 runs=50 mean_ms=0.018662 stddev_ms=0.008208 gflops=175.5830 bw_gbs=716.3787
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.0283699 ms
+Standard deviation:            0.0201054 ms
+Performance:                   115.503 GFLOPS
+Estimated effective bandwidth: 471.251 GB/s
+RESULT kernel=const_mem H=256 W=256 filter_radius=2 filter_width=5 runs=50 mean_ms=0.028370 stddev_ms=0.020105 gflops=115.5026 bw_gbs=471.2508
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.0270202 ms
+Standard deviation:            0.012208 ms
+Performance:                   121.272 GFLOPS
+Estimated effective bandwidth: 494.791 GB/s
+RESULT kernel=cudnn H=256 W=256 filter_radius=2 filter_width=5 runs=50 mean_ms=0.027020 stddev_ms=0.012208 gflops=121.2724 bw_gbs=494.7915
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.0205696 ms
+Standard deviation:            0.0127616 ms
+Performance:                   312.234 GFLOPS
+Estimated effective bandwidth: 1261.68 GB/s
+RESULT kernel=naive H=256 W=256 filter_radius=3 filter_width=7 runs=50 mean_ms=0.020570 stddev_ms=0.012762 gflops=312.2339 bw_gbs=1261.6799
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.0245242 ms
+Standard deviation:            0.0103169 ms
+Performance:                   261.886 GFLOPS
+Estimated effective bandwidth: 1058.23 GB/s
+RESULT kernel=tiled H=256 W=256 filter_radius=3 filter_width=7 runs=50 mean_ms=0.024524 stddev_ms=0.010317 gflops=261.8857 bw_gbs=1058.2322
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.0237747 ms
+Standard deviation:            0.0129107 ms
+Performance:                   270.141 GFLOPS
+Estimated effective bandwidth: 1091.59 GB/s
+RESULT kernel=const_mem H=256 W=256 filter_radius=3 filter_width=7 runs=50 mean_ms=0.023775 stddev_ms=0.012911 gflops=270.1410 bw_gbs=1091.5902
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.104234 ms
+Standard deviation:            0.0105823 ms
+Performance:                   61.6163 GFLOPS
+Estimated effective bandwidth: 248.98 GB/s
+RESULT kernel=cudnn H=256 W=256 filter_radius=3 filter_width=7 runs=50 mean_ms=0.104234 stddev_ms=0.010582 gflops=61.6163 bw_gbs=248.9801
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.0265818 ms
+Standard deviation:            0.0131458 ms
+Performance:                   399.403 GFLOPS
+Estimated effective bandwidth: 1607.47 GB/s
+RESULT kernel=naive H=256 W=256 filter_radius=4 filter_width=9 runs=50 mean_ms=0.026582 stddev_ms=0.013146 gflops=399.4027 bw_gbs=1607.4728
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.0358797 ms
+Standard deviation:            0.00482461 ms
+Performance:                   295.901 GFLOPS
+Estimated effective bandwidth: 1190.91 GB/s
+RESULT kernel=tiled H=256 W=256 filter_radius=4 filter_width=9 runs=50 mean_ms=0.035880 stddev_ms=0.004825 gflops=295.9009 bw_gbs=1190.9098
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.0297222 ms
+Standard deviation:            0.0109726 ms
+Performance:                   357.202 GFLOPS
+Estimated effective bandwidth: 1437.63 GB/s
+RESULT kernel=const_mem H=256 W=256 filter_radius=4 filter_width=9 runs=50 mean_ms=0.029722 stddev_ms=0.010973 gflops=357.2016 bw_gbs=1437.6263
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.137389 ms
+Standard deviation:            0.0130548 ms
+Performance:                   77.2755 GFLOPS
+Estimated effective bandwidth: 311.01 GB/s
+RESULT kernel=cudnn H=256 W=256 filter_radius=4 filter_width=9 runs=50 mean_ms=0.137389 stddev_ms=0.013055 gflops=77.2755 bw_gbs=311.0099
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.0303942 ms
+Standard deviation:            0.00393121 ms
+Performance:                   521.8 GFLOPS
+Estimated effective bandwidth: 2095.82 GB/s
+RESULT kernel=naive H=256 W=256 filter_radius=5 filter_width=11 runs=50 mean_ms=0.030394 stddev_ms=0.003931 gflops=521.8000 bw_gbs=2095.8250
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.0463456 ms
+Standard deviation:            0.00642373 ms
+Performance:                   342.205 GFLOPS
+Estimated effective bandwidth: 1374.48 GB/s
+RESULT kernel=tiled H=256 W=256 filter_radius=5 filter_width=11 runs=50 mean_ms=0.046346 stddev_ms=0.006424 gflops=342.2053 bw_gbs=1374.4774
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.0465037 ms
+Standard deviation:            0.0394104 ms
+Performance:                   341.042 GFLOPS
+Estimated effective bandwidth: 1369.81 GB/s
+RESULT kernel=const_mem H=256 W=256 filter_radius=5 filter_width=11 runs=50 mean_ms=0.046504 stddev_ms=0.039410 gflops=341.0421 bw_gbs=1369.8053
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_256x256.pgm (256 x 256)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.174774 ms
+Standard deviation:            0.00624139 ms
+Performance:                   90.7439 GFLOPS
+Estimated effective bandwidth: 364.476 GB/s
+RESULT kernel=cudnn H=256 W=256 filter_radius=5 filter_width=11 runs=50 mean_ms=0.174774 stddev_ms=0.006241 gflops=90.7439 bw_gbs=364.4756
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0220742 ms
+Standard deviation:            0.01049 ms
+Performance:                   213.76 GFLOPS
+Estimated effective bandwidth: 902.543 GB/s
+RESULT kernel=naive H=512 W=512 filter_radius=1 filter_width=3 runs=50 mean_ms=0.022074 stddev_ms=0.010490 gflops=213.7601 bw_gbs=902.5427
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0166432 ms
+Standard deviation:            0.00187498 ms
+Performance:                   283.515 GFLOPS
+Estimated effective bandwidth: 1197.06 GB/s
+RESULT kernel=tiled H=512 W=512 filter_radius=1 filter_width=3 runs=50 mean_ms=0.016643 stddev_ms=0.001875 gflops=283.5147 bw_gbs=1197.0620
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0203942 ms
+Standard deviation:            0.0100771 ms
+Performance:                   231.369 GFLOPS
+Estimated effective bandwidth: 976.891 GB/s
+RESULT kernel=const_mem H=512 W=512 filter_radius=1 filter_width=3 runs=50 mean_ms=0.020394 stddev_ms=0.010077 gflops=231.3688 bw_gbs=976.8906
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0311507 ms
+Standard deviation:            0.0154855 ms
+Performance:                   151.476 GFLOPS
+Estimated effective bandwidth: 639.566 GB/s
+RESULT kernel=cudnn H=512 W=512 filter_radius=1 filter_width=3 runs=50 mean_ms=0.031151 stddev_ms=0.015486 gflops=151.4762 bw_gbs=639.5660
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.0317894 ms
+Standard deviation:            0.00755933 ms
+Performance:                   412.313 GFLOPS
+Estimated effective bandwidth: 1682.24 GB/s
+RESULT kernel=naive H=512 W=512 filter_radius=2 filter_width=5 runs=50 mean_ms=0.031789 stddev_ms=0.007559 gflops=412.3131 bw_gbs=1682.2374
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.0447923 ms
+Standard deviation:            0.00992601 ms
+Performance:                   292.622 GFLOPS
+Estimated effective bandwidth: 1193.9 GB/s
+RESULT kernel=tiled H=512 W=512 filter_radius=2 filter_width=5 runs=50 mean_ms=0.044792 stddev_ms=0.009926 gflops=292.6216 bw_gbs=1193.8960
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.0396013 ms
+Standard deviation:            0.0164804 ms
+Performance:                   330.979 GFLOPS
+Estimated effective bandwidth: 1350.4 GB/s
+RESULT kernel=const_mem H=512 W=512 filter_radius=2 filter_width=5 runs=50 mean_ms=0.039601 stddev_ms=0.016480 gflops=330.9792 bw_gbs=1350.3953
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.0449875 ms
+Standard deviation:            0.0101765 ms
+Performance:                   291.352 GFLOPS
+Estimated effective bandwidth: 1188.72 GB/s
+RESULT kernel=cudnn H=512 W=512 filter_radius=2 filter_width=5 runs=50 mean_ms=0.044988 stddev_ms=0.010176 gflops=291.3519 bw_gbs=1188.7157
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.0479014 ms
+Standard deviation:            0.0087771 ms
+Performance:                   536.312 GFLOPS
+Estimated effective bandwidth: 2167.14 GB/s
+RESULT kernel=naive H=512 W=512 filter_radius=3 filter_width=7 runs=50 mean_ms=0.047901 stddev_ms=0.008777 gflops=536.3118 bw_gbs=2167.1377
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.060919 ms
+Standard deviation:            0.00653927 ms
+Performance:                   421.709 GFLOPS
+Estimated effective bandwidth: 1704.05 GB/s
+RESULT kernel=tiled H=512 W=512 filter_radius=3 filter_width=7 runs=50 mean_ms=0.060919 stddev_ms=0.006539 gflops=421.7091 bw_gbs=1704.0492
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.0486387 ms
+Standard deviation:            0.0141051 ms
+Performance:                   528.182 GFLOPS
+Estimated effective bandwidth: 2134.29 GB/s
+RESULT kernel=const_mem H=512 W=512 filter_radius=3 filter_width=7 runs=50 mean_ms=0.048639 stddev_ms=0.014105 gflops=528.1822 bw_gbs=2134.2874
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.297043 ms
+Standard deviation:            0.0118045 ms
+Performance:                   86.4861 GFLOPS
+Estimated effective bandwidth: 349.475 GB/s
+RESULT kernel=cudnn H=512 W=512 filter_radius=3 filter_width=7 runs=50 mean_ms=0.297043 stddev_ms=0.011804 gflops=86.4861 bw_gbs=349.4745
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.0707591 ms
+Standard deviation:            0.00649743 ms
+Performance:                   600.168 GFLOPS
+Estimated effective bandwidth: 2415.49 GB/s
+RESULT kernel=naive H=512 W=512 filter_radius=4 filter_width=9 runs=50 mean_ms=0.070759 stddev_ms=0.006497 gflops=600.1681 bw_gbs=2415.4912
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.120169 ms
+Standard deviation:            0.00521125 ms
+Performance:                   353.397 GFLOPS
+Estimated effective bandwidth: 1422.31 GB/s
+RESULT kernel=tiled H=512 W=512 filter_radius=4 filter_width=9 runs=50 mean_ms=0.120169 stddev_ms=0.005211 gflops=353.3967 bw_gbs=1422.3127
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.0739719 ms
+Standard deviation:            0.00765106 ms
+Performance:                   574.101 GFLOPS
+Estimated effective bandwidth: 2310.58 GB/s
+RESULT kernel=const_mem H=512 W=512 filter_radius=4 filter_width=9 runs=50 mean_ms=0.073972 stddev_ms=0.007651 gflops=574.1011 bw_gbs=2310.5796
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.424655 ms
+Standard deviation:            0.00868992 ms
+Performance:                   100.004 GFLOPS
+Estimated effective bandwidth: 402.486 GB/s
+RESULT kernel=cudnn H=512 W=512 filter_radius=4 filter_width=9 runs=50 mean_ms=0.424655 stddev_ms=0.008690 gflops=100.0042 bw_gbs=402.4862
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.108564 ms
+Standard deviation:            0.0150423 ms
+Performance:                   584.346 GFLOPS
+Estimated effective bandwidth: 2347.04 GB/s
+RESULT kernel=naive H=512 W=512 filter_radius=5 filter_width=11 runs=50 mean_ms=0.108564 stddev_ms=0.015042 gflops=584.3459 bw_gbs=2347.0425
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.15884 ms
+Standard deviation:            0.00243895 ms
+Performance:                   399.389 GFLOPS
+Estimated effective bandwidth: 1604.16 GB/s
+RESULT kernel=tiled H=512 W=512 filter_radius=5 filter_width=11 runs=50 mean_ms=0.158840 stddev_ms=0.002439 gflops=399.3893 bw_gbs=1604.1586
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.0988384 ms
+Standard deviation:            0.00924049 ms
+Performance:                   641.844 GFLOPS
+Estimated effective bandwidth: 2577.99 GB/s
+RESULT kernel=const_mem H=512 W=512 filter_radius=5 filter_width=11 runs=50 mean_ms=0.098838 stddev_ms=0.009240 gflops=641.8441 bw_gbs=2577.9854
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_512x512.pgm (512 x 512)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.585841 ms
+Standard deviation:            0.00978258 ms
+Performance:                   108.287 GFLOPS
+Estimated effective bandwidth: 434.937 GB/s
+RESULT kernel=cudnn H=512 W=512 filter_radius=5 filter_width=11 runs=50 mean_ms=0.585841 stddev_ms=0.009783 gflops=108.2869 bw_gbs=434.9374
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0575776 ms
+Standard deviation:            0.0096607 ms
+Performance:                   327.808 GFLOPS
+Estimated effective bandwidth: 1384.08 GB/s
+RESULT kernel=naive H=1024 W=1024 filter_radius=1 filter_width=3 runs=50 mean_ms=0.057578 stddev_ms=0.009661 gflops=327.8076 bw_gbs=1384.0765
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0508307 ms
+Standard deviation:            0.00141565 ms
+Performance:                   371.318 GFLOPS
+Estimated effective bandwidth: 1567.79 GB/s
+RESULT kernel=tiled H=1024 W=1024 filter_radius=1 filter_width=3 runs=50 mean_ms=0.050831 stddev_ms=0.001416 gflops=371.3181 bw_gbs=1567.7877
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0498567 ms
+Standard deviation:            0.0140758 ms
+Performance:                   378.573 GFLOPS
+Estimated effective bandwidth: 1598.42 GB/s
+RESULT kernel=const_mem H=1024 W=1024 filter_radius=1 filter_width=3 runs=50 mean_ms=0.049857 stddev_ms=0.014076 gflops=378.5727 bw_gbs=1598.4181
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.0852128 ms
+Standard deviation:            0.0212992 ms
+Performance:                   221.497 GFLOPS
+Estimated effective bandwidth: 935.209 GB/s
+RESULT kernel=cudnn H=1024 W=1024 filter_radius=1 filter_width=3 runs=50 mean_ms=0.085213 stddev_ms=0.021299 gflops=221.4969 bw_gbs=935.2090
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.105597 ms
+Standard deviation:            0.00896528 ms
+Performance:                   496.5 GFLOPS
+Estimated effective bandwidth: 2025.72 GB/s
+RESULT kernel=naive H=1024 W=1024 filter_radius=2 filter_width=5 runs=50 mean_ms=0.105597 stddev_ms=0.008965 gflops=496.4999 bw_gbs=2025.7195
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.155096 ms
+Standard deviation:            0.0096221 ms
+Performance:                   338.04 GFLOPS
+Estimated effective bandwidth: 1379.2 GB/s
+RESULT kernel=tiled H=1024 W=1024 filter_radius=2 filter_width=5 runs=50 mean_ms=0.155096 stddev_ms=0.009622 gflops=338.0402 bw_gbs=1379.2041
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.104168 ms
+Standard deviation:            0.0141752 ms
+Performance:                   503.312 GFLOPS
+Estimated effective bandwidth: 2053.51 GB/s
+RESULT kernel=const_mem H=1024 W=1024 filter_radius=2 filter_width=5 runs=50 mean_ms=0.104168 stddev_ms=0.014175 gflops=503.3116 bw_gbs=2053.5115
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.152 ms
+Standard deviation:            0.0160436 ms
+Performance:                   344.926 GFLOPS
+Estimated effective bandwidth: 1407.3 GB/s
+RESULT kernel=cudnn H=1024 W=1024 filter_radius=2 filter_width=5 runs=50 mean_ms=0.152000 stddev_ms=0.016044 gflops=344.9263 bw_gbs=1407.2994
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.169684 ms
+Standard deviation:            0.0109199 ms
+Performance:                   605.597 GFLOPS
+Estimated effective bandwidth: 2447.11 GB/s
+RESULT kernel=naive H=1024 W=1024 filter_radius=3 filter_width=7 runs=50 mean_ms=0.169684 stddev_ms=0.010920 gflops=605.5972 bw_gbs=2447.1072
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.225981 ms
+Standard deviation:            0.0103875 ms
+Performance:                   454.731 GFLOPS
+Estimated effective bandwidth: 1837.48 GB/s
+RESULT kernel=tiled H=1024 W=1024 filter_radius=3 filter_width=7 runs=50 mean_ms=0.225981 stddev_ms=0.010387 gflops=454.7309 bw_gbs=1837.4839
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.156158 ms
+Standard deviation:            0.0143042 ms
+Performance:                   658.054 GFLOPS
+Estimated effective bandwidth: 2659.08 GB/s
+RESULT kernel=const_mem H=1024 W=1024 filter_radius=3 filter_width=7 runs=50 mean_ms=0.156158 stddev_ms=0.014304 gflops=658.0541 bw_gbs=2659.0757
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.246723 ms
+Standard deviation:            0.0102404 ms
+Performance:                   416.501 GFLOPS
+Estimated effective bandwidth: 1683 GB/s
+RESULT kernel=cudnn H=1024 W=1024 filter_radius=3 filter_width=7 runs=50 mean_ms=0.246723 stddev_ms=0.010240 gflops=416.5009 bw_gbs=1683.0037
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.260512 ms
+Standard deviation:            0.012195 ms
+Performance:                   652.06 GFLOPS
+Estimated effective bandwidth: 2624.34 GB/s
+RESULT kernel=naive H=1024 W=1024 filter_radius=4 filter_width=9 runs=50 mean_ms=0.260512 stddev_ms=0.012195 gflops=652.0596 bw_gbs=2624.3384
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.461388 ms
+Standard deviation:            0.0105105 ms
+Performance:                   368.171 GFLOPS
+Estimated effective bandwidth: 1481.77 GB/s
+RESULT kernel=tiled H=1024 W=1024 filter_radius=4 filter_width=9 runs=50 mean_ms=0.461388 stddev_ms=0.010511 gflops=368.1706 bw_gbs=1481.7729
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.275882 ms
+Standard deviation:            0.0427159 ms
+Performance:                   615.731 GFLOPS
+Estimated effective bandwidth: 2478.13 GB/s
+RESULT kernel=const_mem H=1024 W=1024 filter_radius=4 filter_width=9 runs=50 mean_ms=0.275882 stddev_ms=0.042716 gflops=615.7311 bw_gbs=2478.1279
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.339462 ms
+Standard deviation:            0.0138676 ms
+Performance:                   500.407 GFLOPS
+Estimated effective bandwidth: 2013.98 GB/s
+RESULT kernel=cudnn H=1024 W=1024 filter_radius=4 filter_width=9 runs=50 mean_ms=0.339462 stddev_ms=0.013868 gflops=500.4070 bw_gbs=2013.9836
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.372038 ms
+Standard deviation:            0.006729 ms
+Performance:                   682.069 GFLOPS
+Estimated effective bandwidth: 2739.55 GB/s
+RESULT kernel=naive H=1024 W=1024 filter_radius=5 filter_width=11 runs=50 mean_ms=0.372038 stddev_ms=0.006729 gflops=682.0690 bw_gbs=2739.5498
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.608986 ms
+Standard deviation:            0.00903699 ms
+Performance:                   416.685 GFLOPS
+Estimated effective bandwidth: 1673.63 GB/s
+RESULT kernel=tiled H=1024 W=1024 filter_radius=5 filter_width=11 runs=50 mean_ms=0.608986 stddev_ms=0.009037 gflops=416.6853 bw_gbs=1673.6287
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.344618 ms
+Standard deviation:            0.012272 ms
+Performance:                   736.339 GFLOPS
+Estimated effective bandwidth: 2957.53 GB/s
+RESULT kernel=const_mem H=1024 W=1024 filter_radius=5 filter_width=11 runs=50 mean_ms=0.344618 stddev_ms=0.012272 gflops=736.3391 bw_gbs=2957.5271
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_1024x1024.pgm (1024 x 1024)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           0.468837 ms
+Standard deviation:            0.0102572 ms
+Performance:                   541.244 GFLOPS
+Estimated effective bandwidth: 2173.92 GB/s
+RESULT kernel=cudnn H=1024 W=1024 filter_radius=5 filter_width=11 runs=50 mean_ms=0.468837 stddev_ms=0.010257 gflops=541.2443 bw_gbs=2173.9233
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.201453 ms
+Standard deviation:            0.0116622 ms
+Performance:                   374.764 GFLOPS
+Estimated effective bandwidth: 1582.34 GB/s
+RESULT kernel=naive H=2048 W=2048 filter_radius=1 filter_width=3 runs=50 mean_ms=0.201453 stddev_ms=0.011662 gflops=374.7639 bw_gbs=1582.3364
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.189173 ms
+Standard deviation:            0.0053596 ms
+Performance:                   399.092 GFLOPS
+Estimated effective bandwidth: 1685.06 GB/s
+RESULT kernel=tiled H=2048 W=2048 filter_radius=1 filter_width=3 runs=50 mean_ms=0.189173 stddev_ms=0.005360 gflops=399.0921 bw_gbs=1685.0554
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.165632 ms
+Standard deviation:            0.0188035 ms
+Performance:                   455.815 GFLOPS
+Estimated effective bandwidth: 1924.55 GB/s
+RESULT kernel=const_mem H=2048 W=2048 filter_radius=1 filter_width=3 runs=50 mean_ms=0.165632 stddev_ms=0.018803 gflops=455.8145 bw_gbs=1924.5503
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.241173 ms
+Standard deviation:            0.00902005 ms
+Performance:                   313.043 GFLOPS
+Estimated effective bandwidth: 1321.74 GB/s
+RESULT kernel=cudnn H=2048 W=2048 filter_radius=1 filter_width=3 runs=50 mean_ms=0.241173 stddev_ms=0.009020 gflops=313.0435 bw_gbs=1321.7390
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.391372 ms
+Standard deviation:            0.0220365 ms
+Performance:                   535.847 GFLOPS
+Estimated effective bandwidth: 2186.25 GB/s
+RESULT kernel=naive H=2048 W=2048 filter_radius=2 filter_width=5 runs=50 mean_ms=0.391372 stddev_ms=0.022036 gflops=535.8468 bw_gbs=2186.2549
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.583354 ms
+Standard deviation:            0.00871146 ms
+Performance:                   359.499 GFLOPS
+Estimated effective bandwidth: 1466.76 GB/s
+RESULT kernel=tiled H=2048 W=2048 filter_radius=2 filter_width=5 runs=50 mean_ms=0.583354 stddev_ms=0.008711 gflops=359.4993 bw_gbs=1466.7570
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.374875 ms
+Standard deviation:            0.0418748 ms
+Performance:                   559.427 GFLOPS
+Estimated effective bandwidth: 2282.46 GB/s
+RESULT kernel=const_mem H=2048 W=2048 filter_radius=2 filter_width=5 runs=50 mean_ms=0.374875 stddev_ms=0.041875 gflops=559.4272 bw_gbs=2282.4629
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           0.565601 ms
+Standard deviation:            0.00971623 ms
+Performance:                   370.783 GFLOPS
+Estimated effective bandwidth: 1512.79 GB/s
+RESULT kernel=cudnn H=2048 W=2048 filter_radius=2 filter_width=5 runs=50 mean_ms=0.565601 stddev_ms=0.009716 gflops=370.7828 bw_gbs=1512.7939
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.641683 ms
+Standard deviation:            0.0137952 ms
+Performance:                   640.569 GFLOPS
+Estimated effective bandwidth: 2588.42 GB/s
+RESULT kernel=naive H=2048 W=2048 filter_radius=3 filter_width=7 runs=50 mean_ms=0.641683 stddev_ms=0.013795 gflops=640.5686 bw_gbs=2588.4202
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.866962 ms
+Standard deviation:            0.00945301 ms
+Performance:                   474.117 GFLOPS
+Estimated effective bandwidth: 1915.82 GB/s
+RESULT kernel=tiled H=2048 W=2048 filter_radius=3 filter_width=7 runs=50 mean_ms=0.866962 stddev_ms=0.009453 gflops=474.1174 bw_gbs=1915.8213
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.550895 ms
+Standard deviation:            0.0105119 ms
+Performance:                   746.134 GFLOPS
+Estimated effective bandwidth: 3014.99 GB/s
+RESULT kernel=const_mem H=2048 W=2048 filter_radius=3 filter_width=7 runs=50 mean_ms=0.550895 stddev_ms=0.010512 gflops=746.1341 bw_gbs=3014.9907
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           0.891912 ms
+Standard deviation:            0.0139544 ms
+Performance:                   460.855 GFLOPS
+Estimated effective bandwidth: 1862.23 GB/s
+RESULT kernel=cudnn H=2048 W=2048 filter_radius=3 filter_width=7 runs=50 mean_ms=0.891912 stddev_ms=0.013954 gflops=460.8548 bw_gbs=1862.2296
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.995709 ms
+Standard deviation:            0.00905228 ms
+Performance:                   682.406 GFLOPS
+Estimated effective bandwidth: 2746.47 GB/s
+RESULT kernel=naive H=2048 W=2048 filter_radius=4 filter_width=9 runs=50 mean_ms=0.995709 stddev_ms=0.009052 gflops=682.4056 bw_gbs=2746.4719
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           1.8105 ms
+Standard deviation:            0.0162199 ms
+Performance:                   375.299 GFLOPS
+Estimated effective bandwidth: 1510.46 GB/s
+RESULT kernel=tiled H=2048 W=2048 filter_radius=4 filter_width=9 runs=50 mean_ms=1.810496 stddev_ms=0.016220 gflops=375.2990 bw_gbs=1510.4626
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.908232 ms
+Standard deviation:            0.103793 ms
+Performance:                   748.132 GFLOPS
+Estimated effective bandwidth: 3011 GB/s
+RESULT kernel=const_mem H=2048 W=2048 filter_radius=4 filter_width=9 runs=50 mean_ms=0.908232 stddev_ms=0.103793 gflops=748.1321 bw_gbs=3011.0007
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           0.976008 ms
+Standard deviation:            0.0108681 ms
+Performance:                   696.18 GFLOPS
+Estimated effective bandwidth: 2801.91 GB/s
+RESULT kernel=cudnn H=2048 W=2048 filter_radius=4 filter_width=9 runs=50 mean_ms=0.976008 stddev_ms=0.010868 gflops=696.1802 bw_gbs=2801.9104
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           1.45712 ms
+Standard deviation:            0.00970676 ms
+Performance:                   696.594 GFLOPS
+Estimated effective bandwidth: 2797.89 GB/s
+RESULT kernel=naive H=2048 W=2048 filter_radius=5 filter_width=11 runs=50 mean_ms=1.457122 stddev_ms=0.009707 gflops=696.5935 bw_gbs=2797.8879
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           2.38708 ms
+Standard deviation:            0.0118124 ms
+Performance:                   425.214 GFLOPS
+Estimated effective bandwidth: 1707.88 GB/s
+RESULT kernel=tiled H=2048 W=2048 filter_radius=5 filter_width=11 runs=50 mean_ms=2.387085 stddev_ms=0.011812 gflops=425.2139 bw_gbs=1707.8839
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           1.31307 ms
+Standard deviation:            0.01451 ms
+Performance:                   773.013 GFLOPS
+Estimated effective bandwidth: 3104.83 GB/s
+RESULT kernel=const_mem H=2048 W=2048 filter_radius=5 filter_width=11 runs=50 mean_ms=1.313071 stddev_ms=0.014510 gflops=773.0135 bw_gbs=3104.8308
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_2048x2048.pgm (2048 x 2048)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           1.40636 ms
+Standard deviation:            0.108544 ms
+Performance:                   721.737 GFLOPS
+Estimated effective bandwidth: 2898.88 GB/s
+RESULT kernel=cudnn H=2048 W=2048 filter_radius=5 filter_width=11 runs=50 mean_ms=1.406359 stddev_ms=0.108544 gflops=721.7372 bw_gbs=2898.8784
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 1.78814e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.879677 ms
+Standard deviation:            0.00750854 ms
+Performance:                   343.296 GFLOPS
+Estimated effective bandwidth: 1449.47 GB/s
+RESULT kernel=naive H=4096 W=4096 filter_radius=1 filter_width=3 runs=50 mean_ms=0.879677 stddev_ms=0.007509 gflops=343.2962 bw_gbs=1449.4728
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.843158 ms
+Standard deviation:            0.00871813 ms
+Performance:                   358.165 GFLOPS
+Estimated effective bandwidth: 1512.25 GB/s
+RESULT kernel=tiled H=4096 W=4096 filter_radius=1 filter_width=3 runs=50 mean_ms=0.843158 stddev_ms=0.008718 gflops=358.1653 bw_gbs=1512.2534
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.799716 ms
+Standard deviation:            0.0169742 ms
+Performance:                   377.621 GFLOPS
+Estimated effective bandwidth: 1594.4 GB/s
+RESULT kernel=const_mem H=4096 W=4096 filter_radius=1 filter_width=3 runs=50 mean_ms=0.799716 stddev_ms=0.016974 gflops=377.6212 bw_gbs=1594.4008
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_3x3.txt (3 x 3)
+Timed runs:                    50
+Mean execution time:           0.983294 ms
+Standard deviation:            0.0548869 ms
+Performance:                   307.121 GFLOPS
+Estimated effective bandwidth: 1296.73 GB/s
+RESULT kernel=cudnn H=4096 W=4096 filter_radius=1 filter_width=3 runs=50 mean_ms=0.983294 stddev_ms=0.054887 gflops=307.1206 bw_gbs=1296.7314
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           1.56685 ms
+Standard deviation:            0.0404573 ms
+Performance:                   535.382 GFLOPS
+Estimated effective bandwidth: 2184.36 GB/s
+RESULT kernel=naive H=4096 W=4096 filter_radius=2 filter_width=5 runs=50 mean_ms=1.566846 stddev_ms=0.040457 gflops=535.3817 bw_gbs=2184.3574
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           2.34025 ms
+Standard deviation:            0.0109695 ms
+Performance:                   358.449 GFLOPS
+Estimated effective bandwidth: 1462.47 GB/s
+RESULT kernel=tiled H=4096 W=4096 filter_radius=2 filter_width=5 runs=50 mean_ms=2.340251 stddev_ms=0.010970 gflops=358.4490 bw_gbs=1462.4720
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           1.25646 ms
+Standard deviation:            0.117388 ms
+Performance:                   667.64 GFLOPS
+Estimated effective bandwidth: 2723.97 GB/s
+RESULT kernel=const_mem H=4096 W=4096 filter_radius=2 filter_width=5 runs=50 mean_ms=1.256457 stddev_ms=0.117388 gflops=667.6396 bw_gbs=2723.9697
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_5x5.txt (5 x 5)
+Timed runs:                    50
+Mean execution time:           2.16365 ms
+Standard deviation:            0.0591664 ms
+Performance:                   387.706 GFLOPS
+Estimated effective bandwidth: 1581.84 GB/s
+RESULT kernel=cudnn H=4096 W=4096 filter_radius=2 filter_width=5 runs=50 mean_ms=2.163654 stddev_ms=0.059166 gflops=387.7056 bw_gbs=1581.8389
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.98023e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           2.54596 ms
+Standard deviation:            0.00829849 ms
+Performance:                   645.794 GFLOPS
+Estimated effective bandwidth: 2609.54 GB/s
+RESULT kernel=naive H=4096 W=4096 filter_radius=3 filter_width=7 runs=50 mean_ms=2.545962 stddev_ms=0.008298 gflops=645.7941 bw_gbs=2609.5354
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           2.80803 ms
+Standard deviation:            0.178941 ms
+Performance:                   585.522 GFLOPS
+Estimated effective bandwidth: 2365.99 GB/s
+RESULT kernel=tiled H=4096 W=4096 filter_radius=3 filter_width=7 runs=50 mean_ms=2.808035 stddev_ms=0.178941 gflops=585.5223 bw_gbs=2365.9883
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           1.8608 ms
+Standard deviation:            0.0539366 ms
+Performance:                   883.582 GFLOPS
+Estimated effective bandwidth: 3570.39 GB/s
+RESULT kernel=const_mem H=4096 W=4096 filter_radius=3 filter_width=7 runs=50 mean_ms=1.860797 stddev_ms=0.053937 gflops=883.5823 bw_gbs=3570.3936
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_7x7.txt (7 x 7)
+Timed runs:                    50
+Mean execution time:           2.95928 ms
+Standard deviation:            0.0340886 ms
+Performance:                   555.597 GFLOPS
+Estimated effective bandwidth: 2245.06 GB/s
+RESULT kernel=cudnn H=4096 W=4096 filter_radius=3 filter_width=7 runs=50 mean_ms=2.959283 stddev_ms=0.034089 gflops=555.5966 bw_gbs=2245.0635
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           3.65517 ms
+Standard deviation:            0.264835 ms
+Performance:                   743.58 GFLOPS
+Estimated effective bandwidth: 2992.68 GB/s
+RESULT kernel=naive H=4096 W=4096 filter_radius=4 filter_width=9 runs=50 mean_ms=3.655168 stddev_ms=0.264835 gflops=743.5798 bw_gbs=2992.6794
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           5.60392 ms
+Standard deviation:            0.397173 ms
+Performance:                   485.001 GFLOPS
+Estimated effective bandwidth: 1951.98 GB/s
+RESULT kernel=tiled H=4096 W=4096 filter_radius=4 filter_width=9 runs=50 mean_ms=5.603921 stddev_ms=0.397173 gflops=485.0013 bw_gbs=1951.9806
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           3.10462 ms
+Standard deviation:            0.0915369 ms
+Performance:                   875.439 GFLOPS
+Estimated effective bandwidth: 3523.37 GB/s
+RESULT kernel=const_mem H=4096 W=4096 filter_radius=4 filter_width=9 runs=50 mean_ms=3.104623 stddev_ms=0.091537 gflops=875.4393 bw_gbs=3523.3733
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_9x9.txt (9 x 9)
+Timed runs:                    50
+Mean execution time:           4.02917 ms
+Standard deviation:            0.124535 ms
+Performance:                   674.557 GFLOPS
+Estimated effective bandwidth: 2714.89 GB/s
+RESULT kernel=cudnn H=4096 W=4096 filter_radius=4 filter_width=9 runs=50 mean_ms=4.029173 stddev_ms=0.124535 gflops=674.5575 bw_gbs=2714.8855
+CUDA devices detected: 1
+
+Device 0: NVIDIA GeForce RTX 4060 Laptop GPU
+Compute capability: 8.9
+Global memory: 7.99561 GiB
+
+Verifying naive against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying tiled against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying const_mem against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+Verifying cudnn against CPU reference...
+Maximum absolute error: 2.38419e-07
+Output comparison passed.
+Passed.
+
+
+naive benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           5.38031 ms
+Standard deviation:            0.415549 ms
+Performance:                   754.619 GFLOPS
+Estimated effective bandwidth: 3030.95 GB/s
+RESULT kernel=naive H=4096 W=4096 filter_radius=5 filter_width=11 runs=50 mean_ms=5.380315 stddev_ms=0.415549 gflops=754.6187 bw_gbs=3030.9480
+
+tiled benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           7.1141 ms
+Standard deviation:            0.186206 ms
+Performance:                   570.71 GFLOPS
+Estimated effective bandwidth: 2292.27 GB/s
+RESULT kernel=tiled H=4096 W=4096 filter_radius=5 filter_width=11 runs=50 mean_ms=7.114097 stddev_ms=0.186206 gflops=570.7100 bw_gbs=2292.2732
+
+const_mem benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           4.24334 ms
+Standard deviation:            0.0971248 ms
+Performance:                   956.815 GFLOPS
+Estimated effective bandwidth: 3843.07 GB/s
+RESULT kernel=const_mem H=4096 W=4096 filter_radius=5 filter_width=11 runs=50 mean_ms=4.243337 stddev_ms=0.097125 gflops=956.8146 bw_gbs=3843.0732
+
+cudnn benchmark
+Image:  /home/abhishek/projects/parallel_programming/final_project/data/images/test_4096x4096.pgm (4096 x 4096)
+Filter: /home/abhishek/projects/parallel_programming/final_project/data/filters/gaussian_11x11.txt (11 x 11)
+Timed runs:                    50
+Mean execution time:           5.67713 ms
+Standard deviation:            0.0579489 ms
+Performance:                   715.165 GFLOPS
+Estimated effective bandwidth: 2872.48 GB/s
+RESULT kernel=cudnn H=4096 W=4096 filter_radius=5 filter_width=11 runs=50 mean_ms=5.677132 stddev_ms=0.057949 gflops=715.1650 bw_gbs=2872.4810
